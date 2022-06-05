@@ -1,0 +1,67 @@
+/*
+_variables_map.scss
+*******************************************************************************************************************/
+// セレクタにしたいvariablesで定義した変数をmapに登録
+
+// padding_**, margin_**, n_margin_**  余白
+$spaceMap:(
+	xsmall: $spaceXSmall,
+	small:  $spaceSmall,
+	medium: $spaceMedium,
+	large:  $spaceLarge,
+	xlarge: $spaceXLarge,
+	none:   0 !important,
+);
+
+// font_**  フォントサイズ
+$fontSizeMap:(
+	notice: $fontNotice,
+	small: $fontSmall,
+	base: $fontBase,
+	medium: $fontMedium,
+	large: $fontLarge,
+	xlarge: $fontXLarge,
+	ularge: $fontULarge,
+);
+
+
+// color_**  フォントカラー
+$colorFontMap:(
+	// mono
+	mono_prim:   $colorMonoTextPrim,
+	mono_second: $colorMonoTextSecond,
+	mono_tert:   $colorMonoTextTert,
+	mono_white:   $colorMonoTextWhite,
+	// 用途ごと
+	main-deep:   $colorMainDeepText,
+	main-base:   $colorMainBaseText,
+	main-light:  $colorMainLightText,
+	positive:    $colorPositiveText,
+	warning:     $colorWarningText,
+	negative:    $colorNegativeText,
+);
+
+// bg_**  背景カラー
+$colorBgMap:(
+	// mono
+	mono_sub-content: $colorMonoSubContentBody,
+	mono_content: $colorMonoContentBody,
+	mono_body:   $colorMonoBody,
+	// 用途ごと
+	main-deep:   $colorMainDeepBg,
+	main-base:   $colorMainBaseBg,
+	main-light:  $colorMainLightBg,
+	main-low:    $colorMainLowBg,
+	positive:    $colorPositiveBg,
+	warning:     $colorWarningBg,
+	negative:    $colorNegativeBg,
+);
+
+// frame_** (Border)  囲い枠のカラー
+$colorFrameMap:(
+	// mono
+	mono_sub-border: $colorMonoSubContentBorder,
+	// 用途ごと
+	main-deep: $colorMainDeepBg,
+	main-base: $colorMainBaseBg,
+);

@@ -1,0 +1,38 @@
+/*
+_webfont.scss
+*******************************************************************************************************************/
+@font-face {
+  font-family: "Noto Sans JP";
+  font-style: normal;
+  font-weight: 100;
+  src: local("Noto Sans CJK JP Thin"),
+	// url("../font/web/NotoSansCJKjp-Thin.woff2") format("woff2"),
+	url("../font/web/NotoSansCJKjp-Thin.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Noto Sans JP";
+  font-style: normal;
+  font-weight: 300;
+  src: local("Noto Sans CJK JP DemiLight"),
+	// url("../font/web/NotoSansCJKjp-DemiLight.woff2") format("woff2"),
+	url("../font/web/NotoSansCJKjp-DemiLight.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Noto Sans JP";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Noto Sans CJK JP Regular"),
+	// url("../font/web/NotoSansCJKjp-Regular.woff2") format("woff2"),
+	url("../font/web/NotoSansCJKjp-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Noto Sans JP";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Noto Sans CJK JP Bold"),
+	// url("../font/web/NotoSansCJKjp-Bold.woff2") format("woff2"),
+	url("../font/web/NotoSansCJKjp-Bold.otf") format("opentype");
+}

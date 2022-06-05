@@ -1,0 +1,17 @@
+/*
+_footer.scss
+*******************************************************************************************************************/
+.footer_body_pc{
+	border-top: 1px solid $colorMonoSubContentBorder;
+	border-bottom: 1px solid $colorMonoSubContentBorder;
+
+	.footer_nav_pc{
+		.footer_nav_item{
+			transition: all .2s;
+			&:hover{
+				color: $colorMonoTextPrim;
+				background-color: $colorMainLightBg;
+			}
+		}
+	}
+}

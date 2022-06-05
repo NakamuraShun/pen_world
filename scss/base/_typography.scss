@@ -1,0 +1,215 @@
+/*
+_typography.scss
+*******************************************************************************************************************/
+// fontfamily
+.family_base{
+	font-family: $fontFamilyBase;
+}
+.family_min{
+	font-family: $fontFamilyMin;
+}
+
+// size
+@each $key,$value in $fontSizeMap{
+	.font_#{$key}{font-size: $value !important}
+}
+
+// scale
+.font_scale_double{  //　ここは会社のをみる！
+	font-size: calc(2 * inherit);
+}
+
+// color
+@each $key,$value in $colorFontMap{
+	.color_#{$key}{color: $value !important}
+}
+
+// weight
+.weight_base{
+	font-weight: $weightBase;
+}
+.weight_bold{
+	font-weight: $weightBold;
+}
+
+// line-height
+.line_reset{
+	line-height: $lineReset;
+}
+.line_narrow{
+	line-height: $lineNarrow;
+}
+.line_base{
+	line-height: $lineBase;
+}
+.line_wide{
+	line-height: $lineWide;
+}
+
+// letter-spacing
+.letter_reset{
+	letter-spacing: $letterReset;
+}
+.letter_small{
+	letter-spacing: $letterSmall;
+}
+.letter_middle{
+	letter-spacing: $letterMiddle;
+}
+.letter_wide{
+	letter-spacing: $letterWide;
+}
+
+// wrap
+.text_nowrap{
+	white-space: nowrap;
+}
+
+// deco
+.text_sub{
+	font-size: $fontSmall;
+	color: $colorMonoTextSecond;
+}
+
+.marker_main{
+	margin-left:.1em;
+	margin-right:.1em;
+	background:linear-gradient(transparent 70%, rgba($colorMainBaseText, 0.6) 30%);
+}
+
+// transform
+.trans_cap{ // 単語の先頭大文字
+	text-transform: capitalize;
+}
+.trans_upper{ // 大文字
+	text-transform: uppercase;
+}
+
+//文字数制限
+@mixin clampSettings{
+	display: -webkit-box;
+	line-height: $lineNarrow;
+	-webkit-box-orient: vertical;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+.clamp_1{
+	@include clampSettings;
+	-webkit-line-clamp: 1;
+}
+.clamp_2{
+	@include clampSettings;
+	-webkit-line-clamp: 2;
+} 
+.clamp_3{
+	@include clampSettings;
+	-webkit-line-clamp: 3;
+}
+
+@media (min-width: $bp-xs){
+	.clamp_xs_2{
+		@include clampSettings;
+		-webkit-line-clamp: 2;
+	}
+	.clamp_xs_3{
+		@include clampSettings;
+		-webkit-line-clamp: 3;
+	}
+}
+
+@media (min-width: $bp-sm){
+	.clamp_sm_2{
+		@include clampSettings;
+		-webkit-line-clamp: 2;
+	}
+	.clamp_sm_3{
+		@include clampSettings;
+		-webkit-line-clamp: 3;
+	}
+}
+
+////////////// title //////////////
+// h1エリア
+.page_title_area{
+	padding: $spaceXLarge 0;
+	border-bottom: 1px solid $colorMonoRule;
+}
+
+.title_h1{
+		font-family: $fontFamilyMin;
+		text-transform: uppercase;
+		color: $colorMonoTextPrim;
+		text-align: center;
+	>p{
+		font-size: $fontULarge;
+		line-height: $lineNarrow;
+		letter-spacing: .2em;
+	}
+	>span{
+		font-size: $fontMedium;
+	}
+}
+
+.title_h2{
+		position: relative;
+		text-align: center;
+		padding-top: $spaceXLarge;
+		margin-bottom: $spaceLarge;
+		font-family: $fontFamilyMin;
+		text-transform: uppercase;
+		color: inherit;
+	>p{
+		font-size: $fontXLarge;
+		line-height: $lineNarrow;
+		letter-spacing: .1em;
+	}
+	>span{
+		display: block;
+		margin-top: $spaceMedium;
+	}
+	&::after{
+		content: "";
+		width: 3em;
+		height: 1px;
+		background-color: currentColor;
+		position: absolute;
+		bottom: 2.2em;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+}
+
+.title_h3{
+		font-family: $fontFamilyMin;
+		text-transform: uppercase;
+		color: $colorMonoTextPrim;
+		background-color: $colorMainLightBg;
+		border-top: 2px solid $colorMainBaseBorder;
+		padding-top: $spaceXSmall;
+		padding-bottom: $spaceXSmall;
+		padding-right: $spaceSmall;
+		padding-left: $spaceSmall;
+		margin-bottom: $spaceMedium;
+	>p{
+		display: inline-block;
+		margin-right: $spaceXSmall;
+		font-size: $fontMedium;
+	}
+	>span{
+		display: inline-block;
+		font-size: $fontSmall;
+	}
+}
+
+.title_h4{
+		font-family: $fontFamilyMin;
+		font-size: $fontBase;
+		color: $colorMonoTextPrim;
+		border-left: 5px solid $colorMainBaseBorder;
+		border-bottom: 1px solid $colorMainBaseBorder;
+		padding-top: $spaceXSmall;
+		padding-bottom: $spaceXSmall;
+		padding-right: $spaceSmall;
+		padding-left: $spaceSmall;
+		margin-bottom: $spaceSmall;
+}

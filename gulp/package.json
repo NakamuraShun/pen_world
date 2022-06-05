@@ -1,0 +1,28 @@
+{
+  "name": "gulp-penworld",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "autoprefixer": "^10.3.1",
+    "gulp": "^4.0.2",
+    "gulp-postcss": "^9.0.0",
+    "gulp-sass": "^5.0.0",
+    "postcss": "^8.3.6",
+    "sass": "^1.37.5"
+  },
+  "browserslist": [
+    "> 1%",
+    "ie >= 10",
+    "ff >= 20",
+    "io2 >= 8",
+    "safari >= 8",
+    "android >= 4"
+  ]
+}

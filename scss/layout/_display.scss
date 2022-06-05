@@ -1,0 +1,137 @@
+/*
+_display.scss
+*******************************************************************************************************************/
+// view
+.view_sp{
+	display: block;
+	@media (min-width: $bp-md){
+		display: none;
+	}
+}
+.view_pc{
+	display: none;
+	@media (min-width: $bp-md){
+		display: block;
+	}
+}
+
+.view_hidden{
+	visibility: hidden;
+}
+
+// height
+.height_full {
+    height: 100%;
+    max-width: 100%;
+}
+
+// position
+.position_sticky{
+	position: sticky;
+	top: 0;
+}
+
+.height_full_vh {
+    height: 100vh;
+}
+
+// width
+.width_full {
+    width: 100%;
+    max-width: 100%;
+}
+
+
+// block
+.block{
+	display: block;
+}
+.inline_block{
+	display: inline-block;
+}
+.inline_flex{
+	display: inline-flex;
+	flex-wrap: wrap;
+}
+.display_none{
+    display: none;
+}
+
+
+// flex
+.flex{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+}
+.flex_column{
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+.flex_nowrap{
+	flex-wrap: nowrap !important;
+}
+.flex_noshrink{ // バグ対策でfigureタグに当てる
+	flex-shrink: 0;
+}
+
+$justifyMap:(
+	start: flex-start,
+	end: flex-end,
+	center: center,
+	between: space-between,
+	around: space-around,
+	evenly: space-evenly,
+);
+@each $selector,$value in $justifyMap{
+	.justify_#{$selector}{justify-content: $value}
+}
+
+$itemsMap:(
+	start: flex-start,
+	end: flex-end,
+	center: center,
+	stretch: stretch,
+);
+@each $selector,$value in $itemsMap{
+	.items_#{$selector}{align-items: $value}
+}
+
+$selfMap:(
+	start: flex-start,
+	end: flex-end,
+	center: center,
+);
+@each $selector,$value in $selfMap{
+	.self_#{$selector}{align-self: $value}
+}
+
+// text-align
+.text_left{text-align:left}
+.text_center{text-align:center}
+.text_right{text-align:right}
+@media (min-width: $bp-sm){.text_sm_left{text-align:left}.text_sm_center{text-align:center}.text_sm_right{text-align:right}}
+@media (min-width: $bp-md){.text_md_left{text-align:left}.text_md_center{text-align:center}.text_md_right{text-align:right}}
+@media (min-width: $bp_lg){.text_lg_left{text-align:left}.text_lg_center{text-align:center}.text_lg_right{text-align:right}}
+@media (min-width: $bp-xl){.text_xl_left{text-align:left}.text_xl_center{text-align:center}.text_xl_right{text-align:right}}
+
+// br
+.br_sm{
+	display: none;
+	@media (min-width: $bp-sm){
+	display: block;
+	}
+}
+.br_md{
+	display: none;
+	@media (min-width: $bp-md){
+	display: block;
+	}
+}
+.br_lg{
+	display: none;
+	@media (min-width: $bp-lg){
+	display: block;
+	}
+}

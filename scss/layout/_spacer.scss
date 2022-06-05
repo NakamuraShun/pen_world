@@ -1,0 +1,88 @@
+/*
+_spacer
+*******************************************************************************************************************/
+/* spase
+-------------------------------------------------- */
+$spaceTypeMap:(
+	padding:  padding,
+	margin:   margin,
+	n_margin: margin,
+);
+$spaceDirectionMap:(
+	t: (top),
+	r: (right),
+	b: (bottom),
+	l: (left),
+	v: (top,bottom),
+	h: (right,left),
+);
+
+// Note: @eachの順番
+// paddingの場合の例
+// 順番1 タイプ    (padding_*_**** / $spaceTypeMap)
+// 順番2 方向      (padding_t_**** / $spaceDirectionMap)
+// 順番3 余白サイズ	(padding_t_xsmall / $spaceMap)
+
+@each $selector_type,$property in $spaceTypeMap{
+
+	// 全方位 
+	// [例) padding_xsmall]
+	@each $selector_size,$property_value in $spaceMap{
+		@if $selector_type == n_margin{
+			@if $selector_size != none{ // n_margin_noneを除外
+				//セレクタ(ネガティブマージン)
+				.#{$selector_type}_#{$selector_size}{
+					#{$property}: calc(-1 * #{$property_value});
+				}
+			}
+		}@else{
+			//セレクタの記述
+			.#{$selector_type}_#{$selector_size}{
+				#{$property}: $property_value;
+			}
+		}
+	}
+	
+	// 方向指定 
+	// [例) padding_t_xsmall]
+	@each $selector_dir,$property_dirArr in $spaceDirectionMap{
+		// 上下,左右 (v,h)
+		@if $selector_dir == v or $selector_dir == h {
+			@each $selector_size,$property_value in $spaceMap{
+				@if ($selector_type == n_margin){
+					@if $selector_size != none{ // n_margin_*_noneを除外
+						//セレクタ(ネガティブマージン)
+						.#{$selector_type}_#{$selector_dir}_#{$selector_size}{
+							#{$property}-#{nth($property_dirArr,1)}: calc(-1 * #{$property_value});
+							#{$property}-#{nth($property_dirArr,2)}: calc(-1 * #{$property_value});
+						}
+					}
+				}@else{
+					//セレクタ
+					.#{$selector_type}_#{$selector_dir}_#{$selector_size}{
+						#{$property}-#{nth($property_dirArr,1)}: $property_value;
+						#{$property}-#{nth($property_dirArr,2)}: $property_value;
+					}
+				}
+			}
+		// 片方向 (t,b,r,l)
+		}@else{
+			@each $selector_size,$property_value in $spaceMap{
+				@if $selector_type == n_margin{
+					@if $selector_size != none{ // n_margin_*_noneを除外
+						//セレクタ(ネガティブマージン)
+						.#{$selector_type}_#{$selector_dir}_#{$selector_size}{
+							#{$property}-#{nth($property_dirArr,1)}: calc(-1 * #{$property_value});
+						}
+					}
+				}@else{
+					//セレクタ
+					.#{$selector_type}_#{$selector_dir}_#{$selector_size}{
+						#{$property}-#{nth($property_dirArr,1)}: $property_value;
+					}
+				}
+			}
+		}
+	}
+
+}

@@ -1,0 +1,200 @@
+/*
+_variables.scss
+*******************************************************************************************************************/
+////////////// カラー //////////////
+
+// * [カテゴリ]..発信する情報の意思表示や情報そのもののを区別する(セレクタ化する際は2単語以上は - で繋ぐ)
+// * [用途].....どのように使用するか(文字色,背景色,枠色など)
+// * [ランク]...重要度に応ずる(コンポーネント側のプロパティ値に変数を当てるので、このファイルでは色の値は直接定義しても良い)
+
+//////// Mono ////////
+// * [カテゴリ][用途][ランク](サイトのベースのため一気に定義)
+// * 基本的に上を濃く下に行くほど薄くすること
+// * Text 文字(３色) → Rule 区切り線 → SubContent サブコンテンツ → Bg 背景
+// * セレクタにしたい場合はmapに登録
+
+$colorMonoTextPrim:        #4a4a4a; // textの基本色
+$colorMonoTextSecond:      #808080; // text_subの色
+$colorMonoTextTert:        #bcbcbc; // プレースホルダーなどの色
+$colorMonoTextWhite:       #fff;    // ※ 濃い背景色を使うサイトに使うフォント色 or アイコンに適応のためMono濃淡の序列規則からは除外)
+$colorMonoRule:            #eaeaea; // hrでsectionや情報の区切りの色
+$colorMonoSubContentBorder:#f2f2f2; // サブコンテンツの枠色
+$colorMonoSubContentBody:  #fafafa; // サブコンテンツの背景色
+$colorMonoContentBody:     #fff;    // ボタンやテーブル背景色
+$colorMonoBody:            #fff;    // bodyやsection背景色
+
+
+////// Mono以外 //////
+// * [カテゴリ]と[用途]を分けて定義
+
+// [カテゴリ]
+// * セレクタ化 NG, [用途]のプレフィックスとしてのみ用いる
+
+///// [メインカラー]
+$__colorMainDeep: #390F1E; //濃いめ
+$__colorMainBase: #600624; //ベース
+$__colorMainLight:#DECCD2; //薄め
+$__colorMainLow:  #f5f5f5; //グレー系 $colorMonoSubContentBody以下にすること
+
+///// [プラスの発信カラー]
+$__colorPositive:#479f76;
+
+///// [特定層向けの発信カラー]
+$__colorWarning: #ffcd39;
+
+///// [マイナスや警告の発信カラー]
+$__colorNegative:#e35d6a;
+
+
+// [用途]
+// * プロパティ値として使用
+// * セレクタにしたい場合はvariables_map.scssに登録
+
+// Text
+$colorMainDeepText:  $__colorMainDeep;
+$colorMainBaseText:  $__colorMainBase;
+$colorMainLightText: $__colorMainLight;
+$colorPositiveText: $__colorPositive;
+$colorWarningText:  $__colorWarning;
+$colorNegativeText: $__colorNegative;
+
+// Bg
+$colorMainDeepBg:  $__colorMainDeep;
+$colorMainBaseBg:  $__colorMainBase;
+$colorMainLightBg: $__colorMainLight;
+$colorMainLowBg:   $__colorMainLow;
+$colorPositiveBg: $__colorPositive;
+$colorWarningBg:  $__colorWarning;
+$colorNegativeBg: $__colorNegative;
+$colorPositiveLightBg: #d1e7dd;
+$colorWarningLightBg:  #fff3cd;
+$colorNegativeLightBg: #f8d7da;
+$colorFormInputDisabledBg: #e9ecef;
+
+// Border
+$colorMainDeepBorder: $__colorMainDeep;
+$colorMainBaseBorder: $__colorMainBase;
+$colorPositiveBorder: $__colorPositive;
+$colorWarningBorder: $__colorWarning;
+$colorNegativeBorder: $__colorNegative;
+$colorFormInputBorder: #ced4da;
+
+////////////// 値 //////////////
+
+// blakePoint 
+$bp-xs: 23.4375em; // 375px
+$bp-sm: 37.5em;    // 600px
+$bp-md: 56.25em;   // 900px
+$bp-lg: 68.75em;   // 1100px
+$bp-xl: 75em;      // 1200px
+
+// container width
+$containerNarrow: 800px;
+$containerBase: 1200px;
+$containerFull: 100%;
+
+// font-family
+$fontFamilyBase: "Noto Sans JP", "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "游ゴシック", YuGothic, "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+$fontFamilyMin: 游明朝, "Yu Mincho", "Hiragino Mincho ProN", "HGS明朝E", "Sawarabi Mincho", メイリオ, Meiryo, serif;
+
+// font-weight
+$weightThin: 100;
+$weightDem: 350;
+$weightBase: 400; // normal
+$weightBold: 700; // bold
+
+// line-height
+$lineReset:  1;
+$lineNarrow: 1.2;
+$lineBase:   1.7;
+$lineWide:   2.0;
+
+// letter
+$letterReset:  0;
+$letterSmall:  .1em;
+$letterMiddle: .2em;
+$letterWide:   .3em;
+
+// radius
+$radiusLight: 4px;
+$radiusBase:  8px;
+$radiusTrue:  50%;
+$radiusFormInput: 4px;
+
+// shoadow
+$shoadowLight: 0 0 4px rgb(51 51 51 / 20%);
+$shoadowBase: 3px 3px 8px rgb(0 0 0 / 10%), 0px 0px 5px rgb(0 0 0 / 10%);
+$shoadowFormInput: 0 0 0 0.2rem $__colorMainLight;
+
+
+////////////// レスポンシブ //////////////
+:root{
+// root:space
+--spacXSmall:  1.3333vw;
+--spaceSmall:  2.6666vw;
+--spaceMedium: 4vw;
+--spaceLarge:  8vw;
+--spaceXLarge: 12vw;
+	@media (min-width: $bp-xs){
+		--spacXSmall:  5px;
+		--spaceSmall:  10px;
+		--spaceMedium: 15px;
+		--spaceLarge:  30px;
+		--spaceXLarge: 45px;
+	}
+// root:gutter
+--gutterReset:	0vw;
+--gutterNarrow:	1.3333vw;
+--gutterBase:	2vw;
+--gutterWide:	3.2vw;
+	@media (min-width: $bp-xs){
+		--gutterReset:	0px;
+		--gutterNarrow:	5px;
+		--gutterBase:	7.5px;
+		--gutterWide:	12px;
+	}
+// root:fontsize
+--fontNotice: 2.6666vw;
+--fontSmall:  3.2vw;
+--fontBase:   3.7333vw;
+--fontMedium: 4.2666vw;
+--fontLarge:  5.8666vw;
+--fontXLarge: 8vw;
+--fontULarge: 12vw;
+	@media (min-width: $bp-xs){
+		--fontNotice: 10px;
+		--fontSmall:  12px;
+		--fontBase:   14px;
+		--fontMedium: 16px;
+		--fontLarge:  22px;
+		--fontXLarge: 30px;
+		--fontULarge: 45px;
+	}
+}
+
+// space
+$spaceXSmall: var(--spacXSmall);  //  5px相当
+$spaceSmall:  var(--spaceSmall);   // 10px相当
+$spaceMedium: var(--spaceMedium);  // 15px相当
+$spaceLarge:  var(--spaceLarge);   // 30px相当
+$spaceXLarge: var(--spaceXLarge);  // 45px相当
+
+// gutter (row.col)
+$gutterReset: var(--gutterReset);	//  0px
+$gutterNarrow: var(--gutterNarrow);	//  5px   * 2 = 10px相当
+$gutterBase: var(--gutterBase);		//  7.5px * 2 = 15px相当
+$gutterWide: var(--gutterWide);		//  12px  * 2 = 24px相当
+
+// fontsize
+$fontNotice: var(--fontNotice);	// 10px相当
+$fontSmall:  var(--fontSmall); 	// 12px相当
+$fontBase:   var(--fontBase); 	// 14px相当
+$fontMedium: var(--fontMedium);	// 16px相当
+$fontLarge:  var(--fontLarge);	// 22px相当
+$fontXLarge: var(--fontXLarge);	// 30px相当
+$fontULarge: var(--fontULarge);	// 45px相当
+
+
+////////////// ユニーク //////////////
+// スマホヘッダーの高さ
+$heightHeaderSp: 60px; // メニューなどの正方形UI連動用

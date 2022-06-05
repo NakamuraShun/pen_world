@@ -1,0 +1,93 @@
+/*
+_form.scss
+*******************************************************************************************************************/
+.form_group{
+
+	// ラベル
+	.form_label{
+		display: block;
+		font-weight: bold;
+		margin-bottom: $spaceXSmall;
+	}
+	.form_label_required{
+		@extend .form_label;
+		position: relative;
+		padding-left: 1.25em;
+		&::before{
+			position: absolute;
+			top: 0;
+			left: 0;
+			content: "※";
+			font-size: inherit;
+			color: $colorMainBaseText;
+		}
+	}
+
+	// コントローラー
+	.form_control{
+		display: block;
+		width: 100%;
+		padding: 5px;
+		font-family: $fontFamilyBase;
+		font-size: $fontBase;
+		color: $colorMainBaseText;
+		border-radius: $radiusFormInput;
+		border: 1px solid $colorFormInputBorder;
+		background-color: $colorMonoContentBody;
+		appearance: none; // Fix appearance for date inputs in Safari
+
+		&[type="file"] {
+			overflow: hidden; // prevent pseudo element button overlap
+			&:not(:disabled):not([readonly]) {
+			cursor: pointer;
+			}
+		}
+		
+		&:focus {
+			background-color: rgb(255, 244, 220);
+			border-color: $colorMainBaseBorder;
+			box-shadow: $shoadowFormInput;
+			outline: 0;
+		}
+		
+		&::placeholder {
+			color: $colorMonoTextTert;
+			// Override Firefox's unusual default opacity; see https://github.com/twbs/bootstrap/pull/11526.
+			opacity: 1;
+		}
+		
+		&:disabled,
+		&[readonly] {
+			background-color: $colorFormInputDisabledBg;
+			// iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655.
+			opacity: 1;
+		}
+	}
+
+	textarea{
+		&.form_control{
+			min-height: 10em;
+		}
+		&.form_control_sm{
+			@extend .form_control;
+			min-height: 7em;
+		}
+		&.form_control_lg{
+			@extend .form_control;
+			min-height: 15em;
+		}				
+	}
+
+	// 個人情報文章
+	.form_privacy_text{
+		overflow-y: scroll;
+		height: 15em;
+	}
+
+	hr{
+		border-top: 1px solid $colorMonoRule;
+		margin-top: $spaceMedium;
+		margin-bottom: $spaceMedium;
+	}
+
+}

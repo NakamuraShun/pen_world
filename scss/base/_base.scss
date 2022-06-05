@@ -1,0 +1,804 @@
+/*
+_base.scss
+*******************************************************************************************************************/
+// body
+body {
+	background-color: $colorMonoBody;
+	color: $colorMonoTextPrim;
+	font-size: $fontBase;
+	line-height: $lineBase;
+	font-family: $fontFamilyBase;
+	width: 100%;
+}
+
+body *,
+body *::before,
+body *::after {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+body.is-fix {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+}
+
+// a
+a {
+	word-break: break-all;
+	background-color: transparent;
+	text-decoration: none;
+	-webkit-tap-highlight-color: transparent;
+	tap-highlight-color: transparent;
+	color: $colorMonoTextPrim;
+}
+
+a:link {
+	text-decoration: none;
+	color: inherit;
+}
+a:visited {
+	text-decoration: none;
+	color: inherit;
+}
+a:hover, a:active {
+	outline-width: 0;
+	text-decoration: none;
+	color: inherit;
+}
+a:focus {
+	outline-width: 0;
+	text-decoration: none;
+	color: inherit;
+}
+
+@media(min-width: $bp-sm){
+  a[href^="tel:"]{
+    pointer-events: none;
+  }
+}
+
+li img, li a, li a img {
+	vertical-align: bottom;
+}
+
+// link
+// aタグに設置
+.text_link{
+	text-decoration: underline !important;
+	color: inherit;
+}
+
+// 設置箇所: aタグの親要素
+%iconLinkSettings{
+	padding-left: 1.2em;
+	display: flex;
+	> a{
+		position: relative;
+		text-decoration: underline !important;
+		color: inherit;
+		&::before{
+			content: "";
+			position: absolute;
+			left: -1.1em;
+			color: inherit;
+			font-family: 'Material Icons';
+			font-size: 1.2em;
+		}
+	}
+}
+.icon_link_arr{
+	@extend %iconLinkSettings;
+	>a{
+		&::before{
+			content: "\e5cc";
+		}
+	}
+}
+
+.icon_link_info{
+	@extend %iconLinkSettings;
+	>a{
+		&::before{
+			content: "\e88e";
+		}
+	}
+}
+
+// hr
+hr{
+	border-top: 1px solid $colorMonoRule;
+	margin-top: $spaceMedium;
+	margin-bottom: $spaceMedium;
+	
+}
+
+// cursor
+.pointer{
+	cursor: pointer;
+}
+
+
+
+// container_**
+.container{
+	max-width: $containerBase;
+	height: 100%;
+	margin: 0 auto;
+	padding-right: $spaceMedium;
+	padding-left: $spaceMedium;
+}
+.container_narrow{
+	max-width: $containerNarrow;
+	height: 100%;
+	margin: 0 auto;
+	padding-right: $spaceMedium;
+	padding-left: $spaceMedium;
+}
+.container_full{
+	width: $containerFull;
+	height: 100%;
+	margin: 0 auto;
+}
+
+// 共通ページタイトル
+.page_title{
+	text-align: center;
+	padding-top: $spaceXLarge;
+	padding-bottom: $spaceXLarge;
+	padding-left: $spaceMedium;
+	padding-right: $spaceMedium;
+	background-color: $colorMonoContentBody;
+	border-bottom: 1px solid $colorMonoSubContentBorder;
+	font-family: $fontFamilyMin;
+	.title_main{
+		font-size: $fontULarge;
+		line-height: $lineNarrow;
+		text-transform: uppercase;
+	}
+	.title_sub{
+		font-size: $fontMedium;
+	}
+}
+
+// アイテムページタイトル
+.page_title_item{
+	@extend .text_md_center;
+	padding-top: $spaceLarge;
+	padding-bottom: $spaceLarge;
+	padding-left: $spaceMedium;
+	padding-right: $spaceMedium;
+	background-color: $__colorMainLow;
+	font-family: $fontFamilyMin;
+	.title_main{
+		color: $colorMainBaseText;
+		font-size: $fontLarge;
+	}
+	.title_sub{
+		margin-top: $spaceSmall;
+	}
+}
+
+// ぱんくず
+.bread_crumb_wrap{
+	padding: 5px 0;
+	background-color: rgba(0,0,0,.7);
+	.bread_crumb{
+		color: $colorMonoTextWhite;
+		font-size: $fontSmall;
+		>li{
+			display: inline-block;
+			position: relative;
+			padding-right: 15px;
+			&::after{
+				position: absolute;
+				top:50%;
+				left: 0;
+				transform: translateY(-50%);
+				@extend .material-icons;
+				content:"e409";
+				color: inherit;
+			}
+		}
+		>li:not(:last-child){
+			text-decoration: underline;
+			:hover{
+				text-decoration: none;
+			}
+		}
+	}
+}
+
+
+
+// bg_**
+@each $key,$value in $colorBgMap{
+	.bg_#{$key}{background-color: $value !important}
+}
+
+.bg_graph{
+	background-color: #ffffff;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23f2f2f2' fill-opacity='0.71'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+
+// fram_**
+@each $key,$value in $colorFrameMap{
+	.frame_#{$key}{border: 1px solid $value !important}
+}
+
+// list_**
+%listSettings{
+	padding-left: 1.2em;
+	> li{
+		position: relative;
+		&::before{
+			content: "";
+			position: absolute;
+			top: 0;
+			left: -1.25em;
+		}
+	}
+}
+
+.list_dot{
+	@extend %listSettings;
+	> li{
+		&::before{
+			content: "・";
+			transform: scale(1.2);
+		}
+	}
+}
+.list_comment{
+	@extend %listSettings;
+	> li{
+		&::before{
+			content: "※";
+		}
+	}
+}
+
+.list_number{
+	counter-reset: int;
+	@extend %listSettings;
+	> li{
+		&::before{
+			counter-increment: int;
+			content: counter(int)'.';
+		}
+	}
+}
+
+// table_**
+// ネストNG
+%__tableSettings{
+	width: 100%;
+	border: 1px solid;
+	th,td{
+		padding: $spaceMedium;
+		border: 1px solid;
+	}
+	th{
+		width: 30%;
+		vertical-align: top;
+	}
+}
+
+%tableBlockSettings{
+	@extend %__tableSettings;
+}
+%tableRespoSettings{
+	@extend %__tableSettings;
+	@media (max-width: $bp-sm){
+		th,td{
+			display: block;
+			width: 100%;
+		}
+	}
+}
+
+.table_block{
+	@extend %tableBlockSettings;
+	border-color: $colorMonoSubContentBorder;
+	th,td{
+		border-color: $colorMonoSubContentBorder;
+	}
+	th{
+		background-color: $colorMonoSubContentBody;
+		text-align: center;
+		vertical-align: middle;
+	}
+}
+.table_respo{
+	@extend %tableRespoSettings;
+	border-color: $colorMonoSubContentBorder;
+	th,td{
+		border-color: $colorMonoSubContentBorder;
+	}
+	th{
+		background-color: $colorMonoSubContentBody;
+		vertical-align: middle;
+	}
+	@media (min-width: $bp-sm){
+		th{
+			text-align: center;
+		}
+	}
+}
+
+
+// btn_**
+// aタグに設置
+// レイアウト: text_** or 横並びはflex_row flex_nowrapなどで制御
+%btnSettings{
+	cursor: pointer;
+	position: relative;
+	width: 100%;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	flex-shrink: 0;
+	text-align: center;
+	padding: .7em 1em .7em 1em;
+	border: 1px solid;
+	box-shadow: $shoadowBase;
+	text-transform: uppercase;
+	font-size: $fontBase;
+	font-family: $fontFamilyMin;
+	transition: all .3s ease-out;
+	&::after{
+		content: "\e5cc";
+		position: absolute;
+		top: 50%;
+		right: .2em;
+		transform: translateY(-50%);
+		font-family: 'Material Icons';
+		color: inherit;
+		font-size: 1.2em;
+	}
+	&:disabled{
+		color: $colorMonoTextSecond !important;
+		border-color: $colorMonoSubContentBorder;
+		background-color: #f2f2f2;
+		pointer-events: none;
+	}
+	@media (min-width: $bp-md){
+	}
+}
+
+.btn_normal{
+	@extend %btnSettings;
+	color: $colorMonoTextPrim !important;
+	border-color: $colorMonoSubContentBorder;
+	background-color: $colorMonoContentBody;
+	&:hover{
+		background-color: $colorMonoSubContentBody;
+	}
+}
+.btn_main{
+	@extend %btnSettings;
+	color: $colorMainBaseText !important;
+	border-color: $colorMainBaseBorder;
+	background-color: $colorMonoContentBody;
+	&:hover{
+		background-color: $colorMainLightBg;
+	}
+}
+.btn_main_fill{
+	@extend %btnSettings;
+	color: $colorMonoTextWhite !important;
+	border-color: $colorMainBaseBorder;
+	background-color: $colorMainBaseBg;
+	&:hover{
+		color: $colorMainBaseText !important;
+		background-color: $colorMonoContentBody;
+	}
+}
+.btn_positive{
+	@extend %btnSettings;
+	color: $colorPositiveText !important;
+	border-color: $colorPositiveBorder;
+	background-color: $colorMonoContentBody;
+	&:hover{
+		background-color: $colorPositiveLightBg;
+	}
+}
+.btn_warning{
+	@extend %btnSettings;
+	color: $colorWarningText !important;
+	border-color: $colorWarningBorder;
+	background-color: $colorMonoContentBody;
+	&:hover{
+		background-color: $colorWarningLightBg;
+	}
+}
+.btn_negative{
+	@extend %btnSettings;
+	color: $colorNegativeText !important;
+	border-color: $colorNegativeBorder;
+	background-color: $colorMonoContentBody;
+	&:hover{
+		background-color: $colorNegativeLightBg;
+	}
+}
+
+.btn_group_block{
+	@media (min-width: $bp-md){
+		text-align: center;
+		[class^="btn_"]{
+			width: auto;
+			min-width: 250px;
+		}
+	}
+}
+
+
+// icon変更 (btn_**に併記)
+.btn_blank::after{content: "\e89e";}
+.btn_anchor::after{content: "\e5cf";}
+.btn_search::after{content: "\e8b6";}
+.btn_reset::after{content: "\f053";}
+.btn_default::after{content: "";}
+
+
+// card_**
+// ネストNG
+%cardSettings{
+	background-color: $colorMonoContentBody;
+	border: 1px solid;
+	box-shadow: $shoadowBase;
+	>a{
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 100%;
+		padding: $spaceMedium;
+		transition: all .3s ease-out;
+		&::after{
+			content: "\e5cc";
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-family: 'Material Icons';
+			color: $colorMonoTextWhite;
+			font-size: 1em;
+			width: $spaceMedium; // paddingと同じ値で設定
+			height: $spaceMedium; // paddingと同じ値で設定
+		}
+	}
+}
+
+.card{
+	@extend %cardSettings;
+	border-color: $colorMonoSubContentBorder;
+	>a{
+		&::after{
+			background-color: #333;
+		}
+		&:hover{
+			background-color: $colorMonoSubContentBody;
+		}
+	}
+}
+.card_main{
+	@extend %cardSettings;
+	border-color: $colorMainBaseBorder;
+	>a{
+		&::after{
+			background-color: $colorMainBaseBg;
+		}
+		&:hover{
+			background-color: $colorMainLightBg;
+		}
+	}
+}
+
+.card_positive{
+	@extend %cardSettings;
+	border-color: $colorPositiveBorder;
+	>a{
+		&::after{
+			background-color: $colorPositiveBg;
+		}
+		&:hover{
+			background-color: $colorPositiveLightBg;
+		}
+	}
+}
+.card_warning{
+	@extend %cardSettings;
+	border-color: $colorWarningBorder;
+	>a{
+		&::after{
+			background-color: $colorWarningBg;
+		}
+		&:hover{
+			background-color: $colorWarningLightBg;
+		}
+	}
+}
+.card_negative{
+	@extend %cardSettings;
+	border-color: $colorNegativeBorder;
+	>a{
+		&::after{
+			background-color: $colorNegativeBg;
+		}
+		&:hover{
+			background-color: $colorNegativeLightBg;
+		}
+	}
+}
+
+// 別ページへの導線カード
+.card_recommend_content{
+	@extend .card_main;
+	height: 100%;
+	>a{
+		display: flex;
+		align-items: center;
+		.recommend_header{
+			display: flex;
+			flex-wrap: nowrap;
+			>figure>img{
+				@extend .thumb_angle_small;
+			}
+			.recommend_title{
+				width: 100%;
+				font-family: $fontFamilyMin;
+				color: $colorMainBaseText;
+				>p{
+					font-size: $spaceMedium;
+					text-transform: uppercase;
+				}
+				>span{
+					display: block;
+				}
+			}
+		}
+	}
+}
+
+.card_access{
+	.access_body{
+		margin-top: $spaceSmall;
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: flex-start;
+		.access_number{
+			position: relative;
+			width: 10%;
+			margin-right: .5em;
+			background-color: $colorMainBaseBg;
+			>p{
+				padding-top: 100%;
+				&>span{
+					position: absolute;
+					top: 50%;
+					left: 50%;
+					transform: translate(-50%,-50%);
+					color: $colorMonoTextWhite;
+					font-size: $fontMedium;
+					@extend .weight_bold;
+				}
+			}
+		}
+		.access_desc{
+			width: 90%;
+		}
+	}
+}
+
+// panel_**
+// ネストNG
+%panelSettings{
+	padding: $spaceMedium;
+	border: 1px solid;
+	border-radius: $radiusBase;
+	overflow: hidden;
+	// white-space: pre-line; // flashなどサーバーからくるテキストを改行できるように
+}
+
+.panel{
+	@extend %panelSettings;
+	background-color: $colorMonoSubContentBody;
+	border-color: $colorMonoSubContentBorder;
+}
+.panel_main{
+	@extend %panelSettings;
+	background-color: $colorMonoSubContentBody;
+	border-color: $colorMainBaseBorder;
+}
+.panel_positive{
+	@extend %panelSettings;
+	background-color: $colorPositiveLightBg;
+	border-color: $colorPositiveBorder;
+}
+.panel_warning{
+	@extend %panelSettings;
+	background-color: $colorWarningLightBg;
+	border-color: $colorWarningBorder;
+}
+.panel_negative{
+	@extend %panelSettings;
+	background-color: $colorNegativeLightBg;
+	border-color: $colorNegativeBorder;
+}
+
+// 修理調整の流れ
+.panel_repair_flow{
+	@extend .panel_main;
+	padding: 0;
+	display: flex;
+	height: 100%;
+	.repair_flow_count{
+		display: flex;
+		justify-content: center;
+		align-items: flex-start;
+		padding: .5em;
+		background-color: $colorMainBaseBg;
+		color: $colorMonoTextWhite;
+		font-family: $fontFamilyMin;
+		font-size: $fontLarge;
+		font-weight: bold;
+	}
+	.repair_flow_body{
+		width: 100%;
+		padding: $spaceMedium;
+		.repair_flow_header{
+			margin-bottom: $spaceSmall;
+			padding-bottom: $spaceSmall;
+			border-bottom: 1px solid $colorMainBaseBorder;
+			font-family: $fontFamilyMin;
+			font-size: $fontMedium;
+			color: $colorMainBaseText;
+			@extend .text_md_center;
+		}
+	}
+}
+
+// image object
+.object_cover{
+	object-fit: cover;
+}
+.object_contain{
+	object-fit: contain;
+}
+
+// thumb_**
+%thumbSettings{
+	object-fit: cover;
+	border: 1px solid $colorMonoSubContentBorder;
+}
+.thumb_angle_small{
+	@extend %thumbSettings;
+	width: 50px;
+	height: 50px;
+}
+.thumb_angle_medium{
+	@extend %thumbSettings;
+	width: 80px;
+	height: 80px;
+}
+.thumb_angle_large{
+	@extend %thumbSettings;
+	width: 100px;
+	height: 100px;
+}
+.thumb_round_small{
+	@extend %thumbSettings;
+	border-radius: $radiusTrue;
+	width: 50px;
+	height: 50px;
+}
+.thumb_round_medium{
+	@extend %thumbSettings;
+	border-radius: $radiusTrue;
+	width: 80px;
+	height: 80px;
+}
+.thumb_round_large{
+	@extend %thumbSettings;
+	border-radius: $radiusTrue;
+	width: 100px;
+	height: 100px;
+}
+
+// img
+img{
+	width: 100%;
+}
+
+// label
+.label{
+	display: inline-block;
+	padding: .5em;
+	color: $colorMonoTextSecond;
+	font-size: $fontSmall;
+	line-height: 1em;
+	text-wrap: nowrap;
+	background-color: $colorMonoContentBody;
+	border: 1px solid $colorMonoSubContentBorder;
+	border-radius: $radiusLight;
+}
+
+// youtube
+.youtube {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// googlemap
+.google_map {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// responsive
+.ratio{
+	position: relative;
+    display: block;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+
+	iframe,img{
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		height: 100%;
+		width: 100%;
+		border: 0;
+	}
+}
+
+// ratio
+.ratio_equal{ // 1:1
+	@extend .ratio;
+	padding-top: 100%;
+}
+.ratio_double{ // 2:1
+	@extend .ratio;
+	padding-top: 50%;
+}
+.ratio_silver{ // 7:5
+	@extend .ratio;
+	padding-top: 70.7%;
+}
+.ratio_golden{ // 16:9
+	@extend .ratio;
+	padding-top: 56.25%;
+}
+
+
+
+/////////////// ユニークUI ///////////////
+//万年筆検索ボックス
+.search_pen_body{
+	background-color: $colorMonoContentBody;
+	border: 1px solid $colorMonoSubContentBorder;
+	.search_pen_cell{
+		@extend .padding_xsmall;
+		border: 1px solid $colorMonoSubContentBorder;
+	}
+}
+.search_pen_submit_btn{
+	height: 100%;
+	@extend .btn_main_fill;
+	@extend .btn_search;
+	background-color: $colorMainBaseBg;
+	color: $colorMonoTextWhite;
+	font-size: $fontMedium;
+}
