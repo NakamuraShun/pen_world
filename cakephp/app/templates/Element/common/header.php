@@ -30,7 +30,7 @@
 			<div class="header_pc_nav">
 				<div class="container">
 					<?php // メニュー ?>
-					<nav class="row row-cols-7 gutter_reset items_center text_center family_min">
+					<nav class="header_pc_nav_list family_min">
 						<a href="<?php echo $this->Url->build([ 'controller' => 'about', 'action' => 'index']); ?>" class="header_pc_nav_item padding_v_small">
 							<p class="trans_upper letter_small">about</p>
 							<p class="font_small">PWKについて</p>

@@ -22,7 +22,13 @@ _header.scss
 		border-bottom: 1px solid $colorMonoSubContentBorder;
 		white-space: nowrap;
 
+		&_list{
+			display: flex;
+			align-items: center;
+		}
 		&_item{
+			width: calc(100% / 7);
+			text-align: center;
 			transition: all .2s;
 			&:hover{
 				background-color: $colorMainLightBg;

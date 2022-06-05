@@ -3621,7 +3621,13 @@ _header.scss
   border-bottom: 1px solid #f2f2f2;
   white-space: nowrap;
 }
+.header_pc_nav_list {
+  display: flex;
+  align-items: center;
+}
 .header_pc_nav_item {
+  width: calc(100% / 7);
+  text-align: center;
   transition: all 0.2s;
 }
 .header_pc_nav_item:hover {
