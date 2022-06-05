@@ -60,6 +60,7 @@ class ItemsController extends App
 		}
 	}
 
+
 	/** savePostItemsImageメソッド
 	* - save済みのItemのimage_pathフィールドと格納先の更新
 	* - $files = fileオブジェクト配列
