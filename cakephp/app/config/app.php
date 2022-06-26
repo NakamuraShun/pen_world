@@ -293,6 +293,11 @@ return [
             'className' => Connection::class,
             'driver' => Mysql::class,
             'persistent' => false,
+            'host' => 'localhost',
+            'username' => 'xs293869_userpwk',
+            'password' => 'paccuman0621',
+            'database' => '293869_pwk',
+            'encoding' => 'utf8',
             'timezone' => 'UTC',
 
             /*
