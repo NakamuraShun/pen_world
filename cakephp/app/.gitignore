@@ -45,3 +45,8 @@ nbproject/*
 # css #
 ##########################
 # /webroot/css/
+
+
+# デバッグファイル #
+##########################
+/src/Controller/log.txt
