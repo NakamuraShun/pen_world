@@ -44,7 +44,7 @@ class Application extends BaseApplication
      */
     public function bootstrap(): void
     {
-
+		 $this->addPlugin('Migrations'); 
         // Call parent to load bootstrap from files.
         parent::bootstrap();
 
@@ -66,7 +66,7 @@ class Application extends BaseApplication
         }
 
         // Load more plugins here
-        $this->addPlugin('Migrations'); // 500エラー解消の可能性 https://qiita.com/norifumi92/items/14d4dc37ee6320854cc8
+        // $this->addPlugin('Migrations'); // 500エラー解消の可能性 https://qiita.com/norifumi92/items/14d4dc37ee6320854cc8
     }
 
     /**
