@@ -14,14 +14,6 @@ cd pen_world
 cakephp/app/bin/cake server
 ```
 
-■gulp起動
-```
-cd gulp
-```
-```
-npx gulp scss_watch
-```
-
 ■MySQL
 起動
 ```
@@ -36,4 +28,12 @@ mysql -uroot
 ■マイグレーション
 ```
 cakephp/app/bin/cake migrations migrate
+```
+
+■gulp起動
+```
+cd gulp
+```
+```
+npx gulp scss_watch
 ```
