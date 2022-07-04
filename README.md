@@ -5,7 +5,7 @@
 git@github.com:NakamuraShun/pen_world.git
 ```
 
-``
+```
 cd pen_world
 ```
 
@@ -24,10 +24,14 @@ npx gulp scss_watch
 
 ■MySQL
 起動
+```
 mysql.server start
+```
 
 rootログイン
+```
 mysql -uroot
+```
 
 ■マイグレーション
 ```
