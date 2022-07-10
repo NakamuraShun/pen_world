@@ -41,11 +41,11 @@ $checkConnection = function (string $name) {
     return compact('connected', 'error');
 };
 
-if (!Configure::read('debug')) :
-    throw new NotFoundException(
-        'Please replace templates/Pages/home.php with your own version or re-enable debug mode.'
-    );
-endif;
+// if (!Configure::read('debug')) :
+//     throw new NotFoundException(
+//         'Please replace templates/Pages/home.php with your own version or re-enable debug mode.'
+//     );
+// endif;
 
 $cakeDescription = 'CakePHP: the rapid development PHP framework';
 ?>
