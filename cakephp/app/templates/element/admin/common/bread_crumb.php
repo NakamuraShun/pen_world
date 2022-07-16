@@ -4,7 +4,7 @@
 				<?php foreach ($breadCrumb as $pageArr): ?>
 					<li>
 						<?php if(!empty($pageArr['controller']) && !empty($pageArr['action'])): ?>
-							<?= $this->html->link(h($pageArr['name']), [ 'controller' => h($pageArr['controller']), 'action' => h($pageArr['action'])]) ?>
+							<?= $this->Html->link(h($pageArr['name']), [ 'controller' => h($pageArr['controller']), 'action' => h($pageArr['action'])]) ?>
 						<?php else: ?>
 							<?= h($pageArr['name']) ?>
 						<?php endif; ?>
