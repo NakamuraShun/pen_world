@@ -12,8 +12,8 @@ class ItemsController extends App
 	public function initialize(): void{
 
 		parent::initialize();
-		$this->Categorys = TableRegistry::getTableLocator()->get('categorys');
-		$this->Brands = TableRegistry::getTableLocator()->get('brands');
+		$this->Categorys = TableRegistry::getTableLocator()->get('Categorys');
+		$this->Brands = TableRegistry::getTableLocator()->get('Brands');
 
 	}
 
