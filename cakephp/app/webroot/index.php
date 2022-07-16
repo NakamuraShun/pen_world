@@ -15,8 +15,14 @@
  * @license       MIT License (https://opensource.org/licenses/mit-license.php)
  */
 
+ $host = $_SERVER["HTTP_HOST"];
+
 // Check platform requirements
-require dirname(__DIR__) . '/config/requirements.php';
+ if(strpos($host,'localhost')!== false){
+	 require dirname(__DIR__) . '/config/requirements.php';
+ }else{
+	 require '/home/xs293869/pen-world.net/cakephp/config/requirements.php';
+ }
 
 // For built-in server
 if (PHP_SAPI === 'cli-server') {
@@ -28,13 +34,21 @@ if (PHP_SAPI === 'cli-server') {
         return false;
     }
 }
-require dirname(__DIR__) . '/vendor/autoload.php';
+if(strpos($host,'localhost')!== false){
+	require dirname(__DIR__) . '/vendor/autoload.php';
+}else{
+	require '/home/xs293869/pen-world.net/cakephp/vendor/autoload.php';
+}
 
 use App\Application;
 use Cake\Http\Server;
 
 // Bind your application to the server.
-$server = new Server(new Application(dirname(__DIR__) . '/config'));
+if(strpos($host,'localhost')!== false){
+	$server = new Server(new Application(dirname(__DIR__) . '/config'));
+}else{
+	$server = new Server(new Application('/home/xs293869/pen-world.net/cakephp/config'));
+}
 
 // Run the request/response through the application and emit the response.
 $server->emit($server->run());
