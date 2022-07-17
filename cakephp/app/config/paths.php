@@ -53,7 +53,9 @@ define('CONFIG', ROOT . DS . 'config' . DS);
  *
  * `define('WWW_ROOT', rtrim($_SERVER['DOCUMENT_ROOT'], DS) . DS);`
  */
-if($_SERVER["HTTP_HOST"] === null){
+ $host = $_SERVER["HTTP_HOST"];
+
+if(strpos($host,'localhost')!== false){
 	define('WWW_ROOT', ROOT . DS . 'webroot' . DS);
 }else{
 	define('WWW_ROOT', 'home/xs293869/pen-world.net' . DS . 'public_html' . DS); //エックスサーバーの公開ディレクトリに修正
