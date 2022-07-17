@@ -89,7 +89,7 @@
 							<i class="material-icons fa-2x">call</i>
 						</a>
 					</div>
-					<div class="box_1by1 hamburger_menu">
+					<div class="box_1by1 hamburger_menu" id="js-sp-menu-trigger">
 						<input id="SP_MENU" type="checkbox">
 						<label for="SP_MENU">
 							<span></span>
@@ -97,7 +97,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="header_sp_nav flex justify_end" id="js-sp-menu-close-trigger">
+			<div class="header_sp_nav flex justify_end">
 				<?php // メニュー ?>
 				<nav class="flex_column gutter_reset justify_end family_min">
 					<a href="<?php echo $this->Url->build([ 'controller' => 'about', 'action' => 'index']); ?>" class="header_sp_nav_item padding_v_small padding_h_medium">
@@ -120,11 +120,11 @@
 						<p class="trans_upper letter_small">store</p>
 						<p class="font_small">店舗情報</p>
 					</a>				
-					<a href="<?php echo $this->Url->build([ 'controller' => 'repair', 'action' => 'index']); ?>" class="header_nav_item padding_v_small padding_h_medium">
+					<a href="<?php echo $this->Url->build([ 'controller' => 'repair', 'action' => 'index']); ?>" class="header_sp_nav_item padding_v_small padding_h_medium">
 						<p class="trans_upper letter_small">repair</p>
 						<p class="font_small">修理調整</p>
 					</a>
-					<a href="<?php echo $this->Url->build([ 'controller' => 'contact', 'action' => 'index']); ?>" class="header_nav_item padding_v_small padding_h_medium">
+					<a href="<?php echo $this->Url->build([ 'controller' => 'contact', 'action' => 'index']); ?>" class="header_sp_nav_item padding_v_small padding_h_medium">
 						<p class="trans_upper letter_small">contact</p>
 						<p class="font_small">お問い合わせ</p>
 					</a>
@@ -135,13 +135,12 @@
 </header>
 
 <script>
-	// sp menu
-	let sp_menu_open_btn = document.getElementById('js-sp-menu-open-trigger');
-	sp_menu_open_btn.addEventListener('click', () => {
-		document.getElementsByTagName('body')[0].classList.toggle('is-active');
-	})
-	let sp_menu_close_bg = document.getElementById('js-sp-menu-close-trigger');
-	sp_menu_close_bg.addEventListener('click', () => {
-		document.getElementsByTagName('body')[0].classList.toggle('is-active');
-	})
+// sp menu
+let spMenuBtn = document.getElementById('SP_MENU');
+spMenuBtn.addEventListener('click', () => {
+	document.getElementById('l-body').classList.remove('is_sp_nav_active');
+	if(spMenuBtn.checked){
+		document.getElementById('l-body').classList.add('is_sp_nav_active');
+	}
+})
 </script>

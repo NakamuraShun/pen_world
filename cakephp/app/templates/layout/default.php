@@ -27,7 +27,7 @@ $current_path = Router::url(); // アクセスパス
 		<?php /* font-awesome */ ?>
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	</head>
-	<body>
+	<body id="l-body">
 		<?php /* 管理画面 */ ?>
 		<?php if (0 === strpos($current_path, '/admin')): ?>
 			<div class="row gutter_reset height_full_vh">

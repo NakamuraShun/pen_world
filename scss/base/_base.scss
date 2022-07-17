@@ -126,8 +126,8 @@ hr{
 	max-width: $containerBase;
 	height: 100%;
 	margin: 0 auto;
-	padding-right: $spaceMedium;
-	padding-left: $spaceMedium;
+	padding-right: $gutterContainer;
+	padding-left: $gutterContainer;
 }
 .container_narrow{
 	max-width: $containerNarrow;

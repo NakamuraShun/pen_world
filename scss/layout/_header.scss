@@ -124,9 +124,10 @@ _header.scss
 
 	&_nav{
 		transform: translateX(100%);
-		transition: all .2s ease-out;
+		transition: all .1s ease-out;
+		margin-top: 1px;
 		>nav{
-			width: 230px;
+			width: 100%;
 		}
 
 		&_item{
@@ -136,8 +137,8 @@ _header.scss
 	}
 }
 
-body.is-active{
-	background: rgba(0, 0, 0, 0.5);
+.is_sp_nav_active{
+	overflow: hidden;
 	.header_sp{
 		&_nav{
 			transform: translateX(0%);

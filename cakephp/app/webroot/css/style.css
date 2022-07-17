@@ -1707,11 +1707,6 @@ p, blockquote, table, th, td, figure {
   padding: 0;
 }
 
-html, body {
-  background: #FFF;
-  color: #000;
-}
-
 * html body {
   font-size: small;
 }
@@ -3710,20 +3705,21 @@ _header.scss
 }
 .header_sp_nav {
   transform: translateX(100%);
-  transition: all 0.2s ease-out;
+  transition: all 0.1s ease-out;
+  margin-top: 1px;
 }
 .header_sp_nav > nav {
-  width: 230px;
+  width: 100%;
 }
 .header_sp_nav_item {
   background-color: #DECCD2;
   border-bottom: 1px solid #600624;
 }
 
-body.is-active {
-  background: rgba(0, 0, 0, 0.5);
+.is_sp_nav_active {
+  overflow: hidden;
 }
-body.is-active .header_sp_nav {
+.is_sp_nav_active .header_sp_nav {
   transform: translateX(0%);
 }
 
