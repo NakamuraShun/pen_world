@@ -185,6 +185,9 @@ $gutterNarrow: var(--gutterNarrow);	//  5px   * 2 = 10px相当
 $gutterBase: var(--gutterBase);		//  7.5px * 2 = 15px相当
 $gutterWide: var(--gutterWide);		//  12px  * 2 = 24px相当
 
+// container
+$gutterContainer: $spaceMedium;
+
 // fontsize
 $fontNotice: var(--fontNotice);	// 10px相当
 $fontSmall:  var(--fontSmall); 	// 12px相当
