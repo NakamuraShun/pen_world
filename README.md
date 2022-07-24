@@ -16,6 +16,9 @@ setup.shの内容
 #!/bin/bash
 set -e
 
+echo -e '\n'
+echo -e '========== 本番の環境構築を開始します ==========\n'
+
 # 初期化
 rm -rf public_html/* public_html/.[^\.]*
 rm -rf cakephp/* cakephp/.[^\.]*
