@@ -22,38 +22,37 @@ class ArticlesController extends App
 	* - $file_data = postされたfileオブジェクト
 	* - $id        = レコードID
 	*/
-	public function savePostArticlesImage($file_data, $id) {
+	public function savePostArticlesImage($file_data, $id, $currentImagePath = null) {
 		$file_name = $file_data->getClientFilename(); // ファイル名
 		$dirPath   = WWW_ROOT.'img/pages/articles/'.$id; // 格納先ディレクトリ
-		App::__debug_vardumpToTxt($file_path);
 
 		//ファイル名に日本語が入ってるかチェック
-		$pattern = "/^[a-z0-9A-Z\-_]+\.[a-zA-Z]{3}$/"; // 日本語を省くための正規表現
-		if(!preg_match($pattern, $file_name)){
-			$er["jp"] = "日本語はダメ";
+		$pattern = "/[ぁ-ん]+|[ァ-ヴー]+|[一-龠]/u"; // 日本語を省くための正規表現
+		if(preg_match($pattern, $file_name)){
+			$er["jp"] = "日本語のファイル名はアップロードできません";
 		}
 
 		//拡張子を調べる
 		$ext = substr($file_name,-3); // アップされた画像の拡張子を抜き出す
 		if($ext!="jpg" && $ext!="gif" && $ext!="png"){ 
-			$er["ext"] = "拡張子がjpgとgifとpngのみアップできます";
+			$er["ext"] = "拡張子はjpgとgifとpng以外はアップロードできません";
 		}
 
-		//ファイル重複チェックする
-		if(file_exists($dirPath)){
-			$files = scandir($dirPath); // ディレクトリー内のファイルを取得する
-			foreach($files as $file){
-				//is_dir関数でディレクトリー以外のファイル（つまり画像のみ）を調べる
-				if(!is_dir($file)){
-					if($file_name == $file){
-						$er["double"] = "重複してるのでアップできません。";
-					}
-				}
-			}
+
+		//編集用
+		if(file_exists($dirPath) && !empty($er)){
+			// 更新前の画像パスに戻す
+			$save_entity = $this->Articles->get($id);
+			$save_entity['image_path'] = $currentImagePath;
+			$this->Articles->save($save_entity);
+
+			return $er;
 		}
 
-		//エラーの配列をチェック
-		if(empty($er)){
+		//エラー判定
+		if(!empty($er)){
+			return $er;
+		}else{
 			// Helper用パスを保存
 			$save_entity = $this->Articles->get($id);
 			$save_entity['image_path'] = 'pages/articles/'.$id.'/'.$file_name;
@@ -69,8 +68,6 @@ class ArticlesController extends App
 			}
 			$file_data->moveTo($dirPath.'/'.$file_name);
 			return true;
-		}else{
-			return false;
 		}
 	}
 
@@ -112,18 +109,18 @@ class ArticlesController extends App
 			
 			if($save_entity = $this->Articles->save($insert_entity)){
 
+				App::__flash_success('お知らせが追加されました');
+
 				// fileがある場合
 				if(!empty($this->request->getData('Articles.image_path')->getClientFilename())){
 					$file_save_flg = $this->savePostArticlesImage($this->request->getData('Articles.image_path'), $save_entity->id);
-					if($file_save_flg){
-						App::__flash_success('お知らせが追加されました');
-					}else{
-						App::__flash_error('お知らせは追加できましたが、画像が登録できませんでした');
+					if($file_save_flg !== true){
+						$ers = $file_save_flg; // file_save_flgの中身は$er配列
+						$all_er_msg = implode("/", $ers);
+						App::__flash_error("【画像アップロードエラー】<br>画像が登録できませんでした<br>原因:$all_er_msg");
 					}
-					return $this->redirect(['action' => 'index']);
 				}
 				
-				App::__flash_success('お知らせが追加されました');
 			}else{
 				App::__flash_error('お知らせが追加できませんでした');
 			}
@@ -139,9 +136,10 @@ class ArticlesController extends App
 
 		if($this->request->is(['post'])){
 
-			$post_data     = $this->request->getData('Articles');
-			$file_name     = $this->request->getData('Articles.image_path')->getClientFilename();
-			$target_entity = $this->Articles->get($post_data["id"]);
+			$post_data        = $this->request->getData('Articles');
+			$file_name        = $this->request->getData('Articles.image_path')->getClientFilename();
+			$target_entity    = $this->Articles->get($post_data["id"]);
+			$currentImagePath = $target_entity->image_path;
 
 			if($file_name){
 				$image_path = null;
@@ -153,13 +151,25 @@ class ArticlesController extends App
 			// save
 			$update_entity = $this->Articles->patchEntity($target_entity,$post_data);
 			if($this->Articles->save($update_entity)){
-				if($file_name){ // 新しい画像へのフィールド名と格納先更新
-					$this->savePostArticlesImage($this->request->getData('Articles.image_path'), $target_entity->id);
-				}
+
 				App::__flash_success('お知らせを編集しました');
+
+				// fileがある場合
+				if($this->request->getData('Articles.image_path')->getClientFilename()){ 
+					// 新しい画像へのフィールド名と格納先更新
+					$file_save_flg = $this->savePostArticlesImage($this->request->getData('Articles.image_path'), $target_entity->id, $currentImagePath);
+					if($file_save_flg !== true){
+						// エラーメッセージ作成
+						$ers = $file_save_flg; // file_save_flgの中身は$er配列
+						$all_er_msg = implode("/", $ers);
+						App::__flash_error("【画像アップロードエラー】<br>画像が更新できませんでした<br>原因:$all_er_msg");
+					}
+				}
+
 			}else{
 				App::__flash_error('お知らせを編集できませんでした');
 			}
+
 			return $this->redirect(['action' => 'index']);
 		}
 
