@@ -31,6 +31,9 @@ echo -e '完了: clone\n'
 # logs/作成
 mkdir pen_world/cakephp/app/logs/
 
+# app_local.php削除
+rm -rf pen_world/cakephp/app/config/app_local.php
+
 # 構成変更
 mv -n pen_world/cakephp/app/webroot/* pen_world/cakephp/app/webroot/.[^\.]* ./
 mv -n pen_world/cakephp/app/* pen_world/cakephp/app/.[^\.]* ../cakephp/
