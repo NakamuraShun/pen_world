@@ -24,7 +24,13 @@ class ArticlesController extends App
 	*/
 	public function savePostArticlesImage($file_data, $id, $currentImagePath = null) {
 		$file_name = $file_data->getClientFilename(); // ファイル名
-		$dirPath   = WWW_ROOT.'img/pages/articles/'.$id; // 格納先ディレクトリ
+
+		$host = $_SERVER["HTTP_HOST"];
+		if(strpos($host,'localhost')!== false){
+			$dirPath = WWW_ROOT.'img/pages/articles/'.$id; // 格納先ディレクトリ
+		}else{
+			$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/articles/'.$id;
+		}
 
 		//ファイル名に日本語が入ってるかチェック
 		$pattern = "/[ぁ-ん]+|[ァ-ヴー]+|[一-龠]/u"; // 日本語を省くための正規表現
