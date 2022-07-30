@@ -35,22 +35,22 @@ class ItemsController extends App
 	}
 
 	/** checkFileメソッド
-	* - ファイル名に日本語入っている、拡張子が異なる場合は$erを返す
 	* - 問題ない場合はtrueを返す
 	* - $file_name = ファイル名
 	*/
 
 	public function checkFile($file_name) {
-		//ファイル名に日本語が入ってるかチェック
-		$pattern = "/^[a-z0-9A-Z\-_]+\.[a-zA-Z]{3}$/"; // 日本語を省くための正規表現
-		if(!preg_match($pattern, $file_name)){
-			$er["jp"] = "・ファイル名に日本語は含まないでください";
+		$er = [];
+
+		//日本語が入ってるか
+		if(preg_match("/[ぁ-ん]+|[ァ-ヴー]+|[一-龠]/u", $file_name)){
+			$er["jp"] = "日本語のファイル名はアップロードできません";
 		}
 
 		//拡張子を調べる
 		$ext = substr($file_name, -3); // アップされた画像の拡張子を抜き出す
 		if($ext != "jpg" && $ext != "gif" && $ext != "png"){ 
-			$er["ext"] = "・jpg,gif,pngの画像のみアップロードできます";
+			$er["ext"] = "拡張子はjpgとgifとpng以外はアップロードできません";
 		}
 
 		if(!empty($er)){
@@ -67,7 +67,7 @@ class ItemsController extends App
 	* - $id    = レコードID
 	*/
 
-	public function savePostItemsImage($updateFiles, $id, $currentImagePaths) {
+	public function savePostItemsImage($updateFiles, $id, $currentImagePaths = null) {
 
 		// App::__debug_vardumpToTxt($currentImagePaths);
 		// App::__debug_vardumpToTxt($updateFiles);
@@ -113,19 +113,21 @@ class ItemsController extends App
 			}
 
 			if(empty($er)){
-				// ディレクトリ確認とファイルの削除
+
+				// ディレクトリ確認
 				if(!file_exists($dirPath)){
 					$folder = new Folder();
 					$folder->create($dirPath);
-				}else{
-					if(!empty($currentImagePaths[$key])){
-						$dir = new Folder($dirPath);
-						$exist_file_name = str_replace("pages/items/$id/", '', $currentImagePaths[$key]);
-						$files = $dir->find($exist_file_name);
-						// App::__debug_vardumpToTxt($files);
-						if(!empty($files)){
-							$files[0]->delete();
-						}
+				}
+
+				// ファイルの削除
+				if(!empty($currentImagePaths[$key])){
+					$dir = new Folder($dirPath);
+					$exist_file_name = str_replace("pages/items/$id/", '', $currentImagePaths[$key]);
+					$files = $dir->find($exist_file_name);
+					// App::__debug_vardumpToTxt($files);
+					if(!empty($files)){
+						$files[0]->delete();
 					}
 				}
 				
@@ -145,7 +147,6 @@ class ItemsController extends App
 			}
 		}
 
-		App::__debug_vardumpToTxt($er);
 
 		if(!empty($ers)){
 			// App::__debug_vardumpToTxt($ers); // 意図した配列になっているか確認
@@ -195,66 +196,102 @@ class ItemsController extends App
 
 	// 登録
 	public function insert(){
-		// App::__debug_vardumpToTxt();
 
 		if($this->request->is('post')){
 
+			// postデータ
 			$post_data = $this->request->getData('Items');
 
 			// intへキャスト
-			$castDatas = ['position','price','category_id','brand_id'];
-			foreach($castDatas as $data) {
-				$post_data[$data] = intval($post_data[$data]);
+			foreach(['position','price','category_id','brand_id'] as $value) {
+				$post_data[$value] = intval($post_data[$value]);
+			}
+			// image_pathをnull
+			for($i = 1; $i < 4; $i++){
+				$post_data['image_path_'.$i] = null;
 			}
 
-			$post_data['image_path_1'] = null;
-			$post_data['image_path_2'] = null;
-			$post_data['image_path_3'] = null;
-
-
+			// 保存
 			$insert_entity = $this->Items->newEntity($post_data);
-
 			if($save_entity = $this->Items->save($insert_entity)){
-
-				// fileがある場合
-				if(!empty(
-					$this->request->getData('Items.image_path_1')->getClientFilename() || 
-					$this->request->getData('Items.image_path_2')->getClientFilename() || 
-					$this->request->getData('Items.image_path_3')->getClientFilename())
-				){
-					for($i = 1; $i < 4; $i++){
-						$files[] = $this->request->getData('Items.image_path_'.$i);
-					}
-
-					 $currentImagePaths = 0;
-
-					// ファイルパスとディレクトリを更新
-					$file_save_flg = $this->savePostItemsImage($files, $save_entity->id, $currentImagePaths); 
-
-					if($file_save_flg === true){
-						App::__flash_success('画像も商品も追加されました');
-					}else{
-						// $ers[]
-						// エラーメッセージ作成
-						$er_msgs[] = '';
-						$ers = $file_save_flg;
-						foreach($ers as $key => $er){
-							$er_msg = join("\n", $er);
-							$count_str = (string)$key + 1;
-							$er_msgs[] = $count_str.'枚目'."\n".$er_msg;
-						}
-						$all_er_msg = join("\n", $er_msgs);
-						App::__flash_error('商品は追加できましたが、画像が登録できませんでした' . "\n" . $all_er_msg);
-					}
-					return $this->redirect(['action' => 'index']);
-				}
-
-				// image_path_1が必須のため基本的にこちらはない
 				App::__flash_success('商品が追加されました');
 			}else{
 				App::__flash_error('商品が追加できませんでした');
+				return $this->redirect(['action' => 'index']);
 			}
-			return $this->redirect(['action' => 'index']);
+
+			// fileがある場合
+			if(!empty(
+				$this->request->getData('Items.image_path_1')->getClientFilename() || 
+				$this->request->getData('Items.image_path_2')->getClientFilename() || 
+				$this->request->getData('Items.image_path_3')->getClientFilename())
+			){
+
+				$ers = [];       // エラー配列
+				$filePaths = []; // DBに保存するためのファイルパス配列
+
+				$host = $_SERVER["HTTP_HOST"];
+				if(strpos($host,'localhost')!== false){
+					$dirPath = WWW_ROOT.'img/pages/items/'.$save_entity->id; // 格納先
+				}else{
+					$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/items/'.$save_entity->id;
+				}
+
+				// ファイル格納
+				for($i = 1; $i < 4; $i++){
+					if(!empty($this->request->getData('Items.image_path_'.$i)->getClientFilename())){
+
+						$fileData = $this->request->getData('Items.image_path_'.$i);
+						$fileName = $this->request->getData('Items.image_path_'.$i)->getClientFilename();
+
+						// エラーチェック
+						$errResult = $this->checkFile($fileName);
+						if($errResult !== true){
+							$ers[] = $errResult;
+							continue; // エラーを記録して次へスキップ
+						}
+
+						// ディレクトリ作成
+						if(!file_exists($dirPath)){
+							$folder = new Folder();
+							$folder->create($dirPath);
+						}
+
+						// ファイル格納
+						$fileData->moveTo($dirPath.'/'.$fileName);
+
+						// パス配列に追加
+						$filePaths[] = 'pages/items/'.$save_entity->id.'/'.$fileName;
+
+					}
+				}
+
+				// パス更新
+				$target_entity = $this->Items->get($save_entity->id);
+
+				foreach($filePaths as $key => $value){
+					$target_entity['image_path_'.($key + 1)] = $value;
+				}
+
+				if($this->Items->save($target_entity)){
+
+					if(!empty($ers)){
+						$erMsgs = [];
+						foreach($ers as $key => $er){
+							$count = (string)$key + 1;
+							$erMsgs[] = $count.'枚目'."\n".join("\n", $er);
+						}
+						$erAllMsgs = join("\n", $erMsgs);
+						App::__flash_error("【画像アップロードエラー】以下理由で画像が登録できませんでした<br>$erAllMsgs");
+					}
+			
+				}else{
+
+					App::__flash_error("【画像アップロードエラー】以下理由で画像が登録できませんでした<br>サーバーエラー");
+
+				}
+			}
+
 		}
 
 		return $this->redirect(['action' => 'index']);
@@ -276,34 +313,33 @@ class ItemsController extends App
 			foreach($castDatas as $data) {
 				$post_data[$data] = intval($post_data[$data]);
 			}
-
 			// 既存の画像パス配列
 			for($i = 1; $i < 4; $i++){
 				$currentImagePaths[] = $target_entity["image_path_$i"];
 			}
 
-			// fileがある場合はnullへ更新
+			// image_path_の調整
 			if(!empty(
 				$this->request->getData('Items.image_path_1')->getClientFilename() || 
 				$this->request->getData('Items.image_path_2')->getClientFilename() || 
 				$this->request->getData('Items.image_path_3')->getClientFilename())
 			){
+				// fileがある場合はnullへ
 				$post_data['image_path_1'] = null;
 				$post_data['image_path_2'] = null;
 				$post_data['image_path_3'] = null;
 			}else{
+				// fileがない場合は既存パスへ
 				for($i = 0; $i < 3; $i++){
 					$post_data['image_path_'.($i + 1)] = $currentImagePaths[$i];
 				}
 			}
-			// App::__debug_vardumpToTxt($post_data['image_path_1']);
-			// App::__debug_vardumpToTxt($post_data['image_path_2']);
-			// App::__debug_vardumpToTxt($post_data['image_path_3']);
-
 
 			$update_entity = $this->Items->patchEntity($target_entity,$post_data);
-	
-			if($save_entity = $this->Items->save($update_entity)){
+
+			if($this->Items->save($update_entity)){
+
+				App::__flash_success('商品が更新されました');
 
 				// fileがある場合
 				if(!empty(
@@ -314,13 +350,10 @@ class ItemsController extends App
 					for($i = 1; $i < 4; $i++){
 						$updateFiles[] = $this->request->getData('Items.image_path_'.$i);
 					}
-
 					// ファイルパスとディレクトリを更新
-					$file_save_flg = $this->savePostItemsImage($updateFiles, $save_entity->id, $currentImagePaths); 
+					$file_save_flg = $this->savePostItemsImage($updateFiles, $target_entity["id"], $currentImagePaths); 
 
-					if($file_save_flg === true){
-						App::__flash_success('画像も商品も更新されました');
-					}else{
+					if($file_save_flg !== true){
 						// $ers[]
 						// エラーメッセージ作成
 						$er_msgs[] = '';
@@ -331,16 +364,15 @@ class ItemsController extends App
 							$er_msgs[] = $count_str.'枚目'."\n".$er_msg;
 						}
 						$all_er_msg = join("\n", $er_msgs);
-						App::__flash_error('商品は更新できましたが、画像が更新できませんでした' . "\n" . $all_er_msg);
+						App::__flash_error("【画像アップロードエラー】<br>画像が登録できませんでした<br>原因:$all_er_msg");
 					}
 					return $this->redirect(['action' => 'index']);
 				}
 
-				// image_path_1が必須のため基本的にこちらはない
-				App::__flash_success('商品が更新されました');
 			}else{
-				App::__flash_error('商品が更新できませんでした');
+				App::__flash_error('更新できませんでした');
 			}
+
 			return $this->redirect(['action' => 'index']);
 		}
 
