@@ -65,6 +65,10 @@
 							<?= h($target_entity->image_path_1); ?>
 						</figcaption>
 					</figure>
+					<div class="margin_v_small">
+						<?= $this->Form->label('image_delete_1', 'この画像を削除'); ?>
+						<?= $this->Form->checkbox('image_delete_1', ['hiddenField' => false]); ?>
+					</div>
 				<?php else: ?>
 					<p class="text_sub">
 						画像1はありません
@@ -83,6 +87,10 @@
 							<?= h($target_entity->image_path_2); ?>
 						</figcaption>
 					</figure>
+					<div class="margin_v_small">
+						<?= $this->Form->label('image_delete_2', 'この画像を削除'); ?>
+						<?= $this->Form->checkbox('image_delete_2', ['hiddenField' => false]); ?>
+					</div>
 				<?php else: ?>
 					<p class="text_sub">
 						画像2はありません
@@ -101,6 +109,10 @@
 							<?= h($target_entity->image_path_3); ?>
 						</figcaption>
 					</figure>
+					<div class="margin_v_small">
+						<?= $this->Form->label('image_delete_3', 'この画像を削除'); ?>
+						<?= $this->Form->checkbox('image_delete_3', ['hiddenField' => false]); ?>
+					</div>
 				<?php else: ?>
 					<p class="text_sub">
 						画像3はありません
