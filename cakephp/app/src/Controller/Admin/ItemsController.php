@@ -340,18 +340,65 @@ class ItemsController extends App
 				for($i = 1; $i < 4; $i++){
 					$post_data["image_path_$i"] = $target_entity["image_path_$i"];
 				}
-
-				$update_entity = $this->Items->patchEntity($target_entity,$post_data);
-
-				if($this->Items->save($update_entity)){
-					App::__flash_success('更新されました');
-				}else{
-					App::__flash_error('更新できませんでした');
-				}
-
-				return $this->redirect(['action' => 'index']);
 			}
 
+
+			$target_id = $target_entity["id"];
+
+			$host = $_SERVER["HTTP_HOST"];
+			if(strpos($host,'localhost')!== false){
+				$dirPath = WWW_ROOT.'img/pages/items/'.$target_id; // 格納先
+			}else{
+				$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/items/'.$target_id;
+			}
+
+			// パターン2:削除フラグだけ
+			if(
+				empty($file_name_1 && $file_name_2 && $file_name_3) && 
+				!empty($file_del_flg_1 || $file_del_flg_2 || $file_del_flg_3)
+			){
+				$leave_file_paths = []; // 削除しないファイルのパスをセット
+
+				for($i = 1; $i < 4; $i++){
+
+					if(${"file_del_flg_$i"} == "1"){ // 削除フラグのチェックが入っていた場合
+
+						$delete_file_name = str_replace("pages/items/$target_id/", '', $target_entity["image_path_$i"]);
+
+						$file = new File($dirPath.'/'.$delete_file_name);
+
+						if(!$file->delete()){ // ファイル削除
+							App::__flash_error('削除できないファイルがありました');
+							return $this->redirect(['action' => 'index']);
+						}
+
+					}else{
+	
+						$leave_file_paths[] = $target_entity["image_path_$i"];
+	
+					}
+				}
+
+				// フォールドの値の繰り上げの準備
+				for($i = 1; $i < 4; $i++){
+					$post_data["image_path_$i"] = null; // 一旦全てnullにする
+				}
+				// フォールドの値の繰り上げ
+				foreach($leave_file_paths as $key => $value){
+					$post_data['image_path_'.($key + 1)] = $value;
+				}
+			}
+
+
+			$update_entity = $this->Items->patchEntity($target_entity,$post_data);
+
+			if($this->Items->save($update_entity)){
+				App::__flash_success('更新されました');
+			}else{
+				App::__flash_error('更新できませんでした');
+			}
+
+			return $this->redirect(['action' => 'index']);
 
 			// image_path_の調整
 			if(!empty(
