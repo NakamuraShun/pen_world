@@ -303,20 +303,55 @@ class ItemsController extends App
 
 		if($this->request->is('post')){
 
-			$post_data = $this->request->getData('Items');
-			$target_entity = $this->Items->get($post_data["id"], [
+			// 更新エンティティ
+			$target_entity = $this->Items->get($this->request->getData('Items.id'), [
 				'contain' => ['Categorys', 'Brands']
 			]);
 
-			// intへキャスト
-			$castDatas = ['position','price','category_id','brand_id'];
-			foreach($castDatas as $data) {
+			// 送信データ
+			$post_data = $this->request->getData('Items');
+
+			foreach(['position','price','category_id','brand_id'] as $data) { // intへキャスト
 				$post_data[$data] = intval($post_data[$data]);
 			}
-			// 既存の画像パス配列
-			for($i = 1; $i < 4; $i++){
-				$currentImagePaths[] = $target_entity["image_path_$i"];
+
+			// 送信ファイル名
+			$file_name_1 = $this->request->getData('Items.image_path_1')->getClientFilename();
+			$file_name_2 = $this->request->getData('Items.image_path_2')->getClientFilename();
+			$file_name_3 = $this->request->getData('Items.image_path_3')->getClientFilename();
+
+			// ファイル削除フラグ
+			$file_del_flg_1 = $this->request->getData('image_delete_1');
+			$file_del_flg_2 = $this->request->getData('image_delete_2');
+			$file_del_flg_3 = $this->request->getData('image_delete_3');
+
+
+			// パターン1:送信ファイルも削除フラグも無い
+			if(empty(
+				$file_name_1 && 
+				$file_name_2 && 
+				$file_name_3 && 
+				$file_del_flg_1 && 
+				$file_del_flg_2 && 
+				$file_del_flg_3
+				)
+			){
+				// 既存の画像パス配列で上書き
+				for($i = 1; $i < 4; $i++){
+					$post_data["image_path_$i"] = $target_entity["image_path_$i"];
+				}
+
+				$update_entity = $this->Items->patchEntity($target_entity,$post_data);
+
+				if($this->Items->save($update_entity)){
+					App::__flash_success('更新されました');
+				}else{
+					App::__flash_error('更新できませんでした');
+				}
+
+				return $this->redirect(['action' => 'index']);
 			}
+
 
 			// image_path_の調整
 			if(!empty(
