@@ -36,21 +36,27 @@ class ItemsController extends App
 
 	/** checkFileメソッド
 	* - 問題ない場合はtrueを返す
-	* - $file_name = ファイル名
+	* - $fileName       = ファイル名
+	* - $countFileNames = ファイル名の配列
 	*/
 
-	public function checkFile($file_name) {
+	public function checkFile($fileName, $countFileNames) {
 		$er = [];
 
 		//日本語が入ってるか
-		if(preg_match("/[ぁ-ん]+|[ァ-ヴー]+|[一-龠]/u", $file_name)){
+		if(preg_match("/[ぁ-ん]+|[ァ-ヴー]+|[一-龠]/u", $fileName)){
 			$er["jp"] = "日本語のファイル名はアップロードできません";
 		}
 
 		//拡張子を調べる
-		$ext = substr($file_name, -3); // アップされた画像の拡張子を抜き出す
+		$ext = substr($fileName, -3); // アップされた画像の拡張子を抜き出す
 		if($ext != "jpg" && $ext != "gif" && $ext != "png"){ 
 			$er["ext"] = "拡張子はjpgとgifとpng以外はアップロードできません";
+		}
+
+		// 重複を確認
+		if($countFileNames[$fileName] > 1){
+			$er["duplication"] = "ファイル名が重複している画像はアップロードできません";
 		}
 
 		if(!empty($er)){
@@ -220,11 +226,16 @@ class ItemsController extends App
 				return $this->redirect(['action' => 'index']);
 			}
 
+			// 送信ファイル名
+			$file_name_1 = $this->request->getData('Items.image_path_1')->getClientFilename();
+			$file_name_2 = $this->request->getData('Items.image_path_2')->getClientFilename();
+			$file_name_3 = $this->request->getData('Items.image_path_3')->getClientFilename();
+
 			// fileがある場合
 			if(!empty(
-				$this->request->getData('Items.image_path_1')->getClientFilename() || 
-				$this->request->getData('Items.image_path_2')->getClientFilename() || 
-				$this->request->getData('Items.image_path_3')->getClientFilename())
+				$file_name_1 || 
+				$file_name_2 || 
+				$file_name_3)
 			){
 
 				$ers = [];       // エラー配列
@@ -237,6 +248,8 @@ class ItemsController extends App
 					$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/items/'.$save_entity->id;
 				}
 
+				$countFileNames = array_count_values([$file_name_1,$file_name_2,$file_name_3]); // checkFile()に渡す重複確認用の配列
+				
 				// ファイル格納
 				for($i = 1; $i < 4; $i++){
 					if(!empty($this->request->getData('Items.image_path_'.$i)->getClientFilename())){
@@ -245,7 +258,7 @@ class ItemsController extends App
 						$fileName = $this->request->getData('Items.image_path_'.$i)->getClientFilename();
 
 						// エラーチェック
-						$errResult = $this->checkFile($fileName);
+						$errResult = $this->checkFile($fileName, $countFileNames);
 						if($errResult !== true){
 							$ers[] = $errResult;
 							continue; // エラーを記録して次へスキップ
@@ -266,7 +279,7 @@ class ItemsController extends App
 					}
 				}
 
-				// パス更新
+				// ファイルパス保存
 				$target_entity = $this->Items->get($save_entity->id);
 
 				foreach($filePaths as $key => $value){
@@ -274,14 +287,13 @@ class ItemsController extends App
 				}
 
 				if($this->Items->save($target_entity)){
-
 					if(!empty($ers)){
 						$erMsgs = [];
 						foreach($ers as $key => $er){
 							$count = (string)$key + 1;
-							$erMsgs[] = $count.'枚目'."\n".join("\n", $er);
+							$erMsgs[] = $count.'枚目'.':'.join(' / ', $er);
 						}
-						$erAllMsgs = join("\n", $erMsgs);
+						$erAllMsgs = join('<br>', $erMsgs);
 						App::__flash_error("【画像アップロードエラー】以下理由で画像が登録できませんでした<br>$erAllMsgs");
 					}
 			
