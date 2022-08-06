@@ -219,11 +219,6 @@ class ItemsController extends App
 
 		if($this->request->is('post')){
 
-			// 更新エンティティ
-			$target_entity = $this->Items->get($this->request->getData('Items.id'), [
-				'contain' => ['Categorys', 'Brands']
-			]);
-
 			// 送信データ
 			$post_data = $this->request->getData('Items');
 
@@ -231,10 +226,18 @@ class ItemsController extends App
 				$post_data[$data] = intval($post_data[$data]);
 			}
 
+			// 送信ファイル
+			$file_1 = $this->request->getData('Items.image_path_1');
+			$file_2 = $this->request->getData('Items.image_path_2');
+			$file_3 = $this->request->getData('Items.image_path_3');
+
 			// 送信ファイル名
-			$file_name_1 = $this->request->getData('Items.image_path_1')->getClientFilename();
-			$file_name_2 = $this->request->getData('Items.image_path_2')->getClientFilename();
-			$file_name_3 = $this->request->getData('Items.image_path_3')->getClientFilename();
+			$file_name_1 = $file_1->getClientFilename();
+			$file_name_2 = $file_2->getClientFilename();
+			$file_name_3 = $file_3->getClientFilename();
+			
+			// checkFile()に渡す重複確認用の配列
+			$countFileNames = array_count_values([$file_name_1,$file_name_2,$file_name_3]);
 
 			// ファイル削除フラグ
 			$file_del_flg_1 = $this->request->getData('image_delete_1');
@@ -242,30 +245,46 @@ class ItemsController extends App
 			$file_del_flg_3 = $this->request->getData('image_delete_3');
 
 
+			// 更新エンティティ
+			$target_entity = $this->Items->get($this->request->getData('Items.id'), [
+				'contain' => ['Categorys', 'Brands']
+			]);
+
+			// 更新エンティティid
+			$target_id = $target_entity["id"];
+
+			// 更新エンティティimage_path
+			$target_image_path_1 = $target_entity["image_path_1"];
+			$target_image_path_2 = $target_entity["image_path_2"];
+			$target_image_path_3 = $target_entity["image_path_3"];
+
+	
+			// エラー配列
+			$ers = [];
+
+			// DBに保存するためのファイルパス配列
+			$leave_file_paths = [];
+
+			// 格納先
+			$host = $_SERVER["HTTP_HOST"];
+			if(strpos($host,'localhost')!== false){
+				$dirPath = WWW_ROOT.'img/pages/items/'.$target_id;
+			}else{
+				$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/items/'.$target_id;
+			}
+
+
 			// パターン1:送信ファイルも削除フラグも無い
-			if(empty(
-				$file_name_1 && 
-				$file_name_2 && 
-				$file_name_3 && 
-				$file_del_flg_1 && 
-				$file_del_flg_2 && 
-				$file_del_flg_3
+			if(
+				empty(
+					($file_name_1 && $file_name_2 && $file_name_3) && 
+					($file_del_flg_1 && $file_del_flg_2 && $file_del_flg_3)
 				)
 			){
 				// 既存の画像パス配列で上書き
 				for($i = 1; $i < 4; $i++){
 					$post_data["image_path_$i"] = $target_entity["image_path_$i"];
 				}
-			}
-
-
-			$target_id = $target_entity["id"];
-
-			$host = $_SERVER["HTTP_HOST"];
-			if(strpos($host,'localhost')!== false){
-				$dirPath = WWW_ROOT.'img/pages/items/'.$target_id; // 格納先
-			}else{
-				$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/items/'.$target_id;
 			}
 
 			// パターン2:削除フラグだけ
@@ -305,6 +324,67 @@ class ItemsController extends App
 				}
 			}
 
+			// パターン3:ファイルだけ
+			if(
+				!empty($file_name_1 || $file_name_2 || $file_name_3) && 
+				empty($file_del_flg_1 && $file_del_flg_2 && $file_del_flg_3)
+			){
+
+				// ファイル格納
+				for($i = 1; $i < 4; $i++){
+
+					if(!empty($fileName)){
+
+						// エラーチェック
+						$errResult = $this->checkFile($fileName, $countFileNames); // 調整必要
+						if($errResult !== true){
+							$ers[] = $errResult;
+							if(${'target_image_path_'.$i} !== null){ // 既存パスを格納
+								$leave_file_paths[] = ${'target_image_path_'.$i};
+							}
+							continue; // エラーを記録して次へスキップ
+						}
+
+						// ファイル格納
+						$fileData->moveTo($dirPath.'/'.$fileName);
+
+						// パス配列に追加
+						$leave_file_paths[] = 'pages/items/'.$target_id.'/'.$fileName;
+
+
+						// 既存画像削除
+						if(${'target_image_path_'.$i} !== null){
+							$delete_file_name = str_replace("pages/items/$target_id/", '', ${'target_image_path_'.$i});
+
+							$file = new File($dirPath.'/'.$delete_file_name);
+
+							if(!$file->delete()){
+								App::__flash_error('削除できないファイルがありました');
+								return $this->redirect(['action' => 'index']);
+							}
+						}
+
+					}else{
+
+						if(${'target_image_path_'.$i} !== null){
+							$leave_file_paths[] = ${'target_image_path_'.$i};
+						}
+
+					}
+
+				}
+
+				// フォールドの値の繰り上げの準備
+				for($i = 1; $i < 4; $i++){
+					$post_data["image_path_$i"] = null; // 一旦全てnullにする
+				}
+
+				// フォールドの値の繰り上げ
+				foreach($leave_file_paths as $key => $value){
+					$post_data['image_path_'.($key + 1)] = $value;
+				}
+			}
+
 
 			$update_entity = $this->Items->patchEntity($target_entity,$post_data);
 
@@ -315,64 +395,8 @@ class ItemsController extends App
 			}
 
 			return $this->redirect(['action' => 'index']);
-
-			// image_path_の調整
-			if(!empty(
-				$this->request->getData('Items.image_path_1')->getClientFilename() || 
-				$this->request->getData('Items.image_path_2')->getClientFilename() || 
-				$this->request->getData('Items.image_path_3')->getClientFilename())
-			){
-				// fileがある場合はnullへ
-				$post_data['image_path_1'] = null;
-				$post_data['image_path_2'] = null;
-				$post_data['image_path_3'] = null;
-			}else{
-				// fileがない場合は既存パスへ
-				for($i = 0; $i < 3; $i++){
-					$post_data['image_path_'.($i + 1)] = $currentImagePaths[$i];
-				}
-			}
-
-			$update_entity = $this->Items->patchEntity($target_entity,$post_data);
-
-			if($this->Items->save($update_entity)){
-
-				App::__flash_success('商品が更新されました');
-
-				// fileがある場合
-				if(!empty(
-					$this->request->getData('Items.image_path_1')->getClientFilename() || 
-					$this->request->getData('Items.image_path_2')->getClientFilename() || 
-					$this->request->getData('Items.image_path_3')->getClientFilename())
-				){
-					for($i = 1; $i < 4; $i++){
-						$updateFiles[] = $this->request->getData('Items.image_path_'.$i);
-					}
-					// ファイルパスとディレクトリを更新
-					$file_save_flg = $this->savePostItemsImage($updateFiles, $target_entity["id"], $currentImagePaths); 
-
-					if($file_save_flg !== true){
-						// $ers[]
-						// エラーメッセージ作成
-						$er_msgs[] = '';
-						$ers = $file_save_flg;
-						foreach($ers as $key => $er){
-							$er_msg = join("\n", $er);
-							$count_str = (string)$key + 1;
-							$er_msgs[] = $count_str.'枚目'."\n".$er_msg;
-						}
-						$all_er_msg = join("\n", $er_msgs);
-						App::__flash_error("【画像アップロードエラー】<br>画像が登録できませんでした<br>原因:$all_er_msg");
-					}
-					return $this->redirect(['action' => 'index']);
-				}
-
-			}else{
-				App::__flash_error('更新できませんでした');
-			}
-
-			return $this->redirect(['action' => 'index']);
 		}
+
 
 		// pageSettings
 		$H1_main = '商品編集';
