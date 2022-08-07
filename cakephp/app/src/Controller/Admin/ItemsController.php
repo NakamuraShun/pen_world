@@ -37,10 +37,10 @@ class ItemsController extends App
 	/** checkFileメソッド
 	* - 問題ない場合はtrueを返す
 	* - $fileName       = ファイル名
-	* - $countFileNames = ファイル名の配列
+	* - $countRequestFileNames = ファイル名の配列
 	*/
 
-	public function checkFile($fileName, $countFileNames) {
+	public function checkFile($fileName, $countRequestFileNames) {
 		$er = [];
 
 		//日本語が入ってるか
@@ -55,7 +55,7 @@ class ItemsController extends App
 		}
 
 		// 重複を確認
-		if($countFileNames[$fileName] > 1){
+		if($countRequestFileNames[$fileName] > 1){
 			$er["postDuplication"] = "ファイル名が重複している画像はアップロードできません";
 		}
 
@@ -152,7 +152,7 @@ class ItemsController extends App
 					$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/items/'.$save_entity->id;
 				}
 
-				$countFileNames = array_count_values([$file_name_1,$file_name_2,$file_name_3]); // checkFile()に渡す重複確認用の配列
+				$countRequestFileNames = array_count_values([$file_name_1,$file_name_2,$file_name_3]); // checkFile()に渡す重複確認用の配列
 				
 				// ファイル格納
 				for($i = 1; $i < 4; $i++){
@@ -162,7 +162,7 @@ class ItemsController extends App
 						$fileName = $this->request->getData('Items.image_path_'.$i)->getClientFilename();
 
 						// エラーチェック
-						$errResult = $this->checkFile($fileName, $countFileNames);
+						$errResult = $this->checkFile($fileName, $countRequestFileNames);
 						if($errResult !== true){
 							$ers[] = $errResult;
 							continue; // エラーを記録して次へスキップ
@@ -219,10 +219,13 @@ class ItemsController extends App
 
 		if($this->request->is('post')){
 
+			// ****************** セッティング ******************
+
 			// 送信データ
 			$post_data = $this->request->getData('Items');
 
-			foreach(['position','price','category_id','brand_id'] as $data) { // intへキャスト
+			// intへキャスト
+			foreach(['position','price','category_id','brand_id'] as $data) {
 				$post_data[$data] = intval($post_data[$data]);
 			}
 
@@ -237,7 +240,7 @@ class ItemsController extends App
 			$file_name_3 = $file_3->getClientFilename();
 			
 			// checkFile()に渡す重複確認用の配列
-			$countFileNames = array_count_values([$file_name_1,$file_name_2,$file_name_3]);
+			$countRequestFileNames = array_count_values([$file_name_1,$file_name_2,$file_name_3]);
 
 			// ファイル削除フラグ
 			$file_del_flg_1 = $this->request->getData('image_delete_1');
@@ -258,14 +261,12 @@ class ItemsController extends App
 			$target_image_path_2 = $target_entity["image_path_2"];
 			$target_image_path_3 = $target_entity["image_path_3"];
 
-			// 更新エンティティimage_path配列
-			$targetImagePaths = [$target_image_path_1,$target_image_path_2,$target_image_path_3];
-	
+
 			// エラー配列
 			$ers = [];
 
-			// DBに保存するためのファイルパス配列
-			$leave_file_paths = [];
+			// 保存するためのファイルパス配列を現在の値で初期化
+			$updateImagePaths = [$target_image_path_1,$target_image_path_2,$target_image_path_3];
 
 			// 格納先
 			$host = $_SERVER["HTTP_HOST"];
@@ -276,136 +277,100 @@ class ItemsController extends App
 			}
 
 
-			// パターン1:送信ファイルも削除フラグも無い
-			if(
-				empty(
-					($file_name_1 && $file_name_2 && $file_name_3) && 
-					($file_del_flg_1 && $file_del_flg_2 && $file_del_flg_3)
-				)
-			){
-				// 既存の画像パス配列で上書き
-				for($i = 1; $i < 4; $i++){
-					$post_data["image_path_$i"] = $target_entity["image_path_$i"];
-				}
-			}
+			// ****************** 処理はここから ******************
+			App::__debug_vardumpToTxt($updateImagePaths);
 
-			// パターン2:削除フラグだけ
-			if(
-				empty($file_name_1 && $file_name_2 && $file_name_3) && 
-				!empty($file_del_flg_1 || $file_del_flg_2 || $file_del_flg_3)
-			){
-				$leave_file_paths = []; // 削除しないファイルのパスをセット
+			// 削除フラグがあった場合
+			if(!empty($file_del_flg_1 || $file_del_flg_2 || $file_del_flg_3)){
 
 				for($i = 1; $i < 4; $i++){
 
-					if(${"file_del_flg_$i"} == "1"){ // 削除フラグのチェックが入っていた場合
+					if(${"file_del_flg_$i"} == '1'){
 
-						$delete_file_name = str_replace("pages/items/$target_id/", '', $target_entity["image_path_$i"]);
+						$deleteFileName = str_replace("pages/items/$target_id/", '', $target_entity["image_path_$i"]);
+						$file = new File($dirPath.'/'.$deleteFileName);
+						$file->delete(); // 削除
 
-						$file = new File($dirPath.'/'.$delete_file_name);
+						$updateImagePaths[$i-1] = null; // パス更新
 
-						if(!$file->delete()){ // ファイル削除
-							App::__flash_error('削除できないファイルがありました');
-							return $this->redirect(['action' => 'index']);
-						}
-
-					}else{
-	
-						$leave_file_paths[] = $target_entity["image_path_$i"];
-	
 					}
 				}
 
-				// フォールドの値の繰り上げの準備
-				for($i = 1; $i < 4; $i++){
-					$post_data["image_path_$i"] = null; // 一旦全てnullにする
-				}
-				// フォールドの値の繰り上げ
-				foreach($leave_file_paths as $key => $value){
-					$post_data['image_path_'.($key + 1)] = $value;
-				}
 			}
+			App::__debug_vardumpToTxt($updateImagePaths);
 
-			// パターン3:ファイルだけ
-			if(
-				!empty($file_name_1 || $file_name_2 || $file_name_3) && 
-				empty($file_del_flg_1 && $file_del_flg_2 && $file_del_flg_3)
-			){
+			// 送信ファイルがあった場合
+			if(!empty($file_name_1 || $file_name_2 || $file_name_3)){
 
-				// ファイル格納
 				for($i = 1; $i < 4; $i++){
 
-					$fileData        = ${'file_'.$i};
-					$fileName        = ${'file_name_'.$i};         // 送信ファイル名
-					$targetImagePath = ${'target_image_path_'.$i}; // 既存のファイルパス
+					$fileData         = ${'file_'.$i};
+					$fileName         = ${'file_name_'.$i};         // 送信ファイル名
+					$currentImagePath = ${'target_image_path_'.$i}; // 既存のファイルパス
+
 
 					if(!empty($fileName)){
 
-						// 既存画像の重複確認
-						for($c = 1; $c < 4; $c++){
-							if($fileName == str_replace("pages/items/$target_id/", '', ${'target_image_path_'.$c})){
-								$er["targetDuplication"] = "更新前に同名のファイルが存在しました(ファイル名を変更するか、削除してからアップしてください)";
-								$ers[] = $er;
-								continue;
+						// 更新パスと重複して無いかチェック
+						foreach($updateImagePaths as $imagePath){
+							if($imagePath !== null){
+								if($fileName == str_replace("pages/items/$target_id/", '', $imagePath)){
+									$er["targetDuplication"] = "すでに同名のファイルがアップロードされてます(ファイル名を変更するか、先に削除してからアップしてください)";
+									$ers[] = $er;
+									continue;
+								}
 							}
 						}
 
 						if(!empty($er["targetDuplication"])){
-							$leave_file_paths[] = $targetImagePath;
+							$updateImagePaths[$i-1] = $currentImagePath;
 							continue;
 						}
 
 						// エラーチェック
-						$errResult = $this->checkFile($fileName, $countFileNames);
+						$errResult = $this->checkFile($fileName, $countRequestFileNames);
 						if($errResult !== true){
 							$ers[] = $errResult;
-							if($targetImagePath !== null){
-								$leave_file_paths[] = $targetImagePath;
-							}
 							continue;
+						}
+
+						// 既存画像削除
+						if($updateImagePaths[$i-1] !== null){
+							$deleteFileName = str_replace("pages/items/$target_id/", '', $currentImagePath);
+
+							$file = new File($dirPath.'/'.$deleteFileName);
+							$file->delete();
 						}
 
 						// ファイル格納
 						$fileData->moveTo($dirPath.'/'.$fileName);
 
-						// パス配列に追加
-						$leave_file_paths[] = 'pages/items/'.$target_id.'/'.$fileName;
-
-						// 既存画像削除
-						if($targetImagePath !== null){
-							$delete_file_name = str_replace("pages/items/$target_id/", '', $targetImagePath);
-
-							$file = new File($dirPath.'/'.$delete_file_name);
-
-							if(!$file->delete()){
-								App::__flash_error('削除できないファイルがありました');
-								return $this->redirect(['action' => 'index']);
-							}
-						}
-
-					}else{
-
-						if($targetImagePath !== null){
-							$leave_file_paths[] = $targetImagePath;
-						}
+						// パスを上書き
+						$updateImagePaths[$i-1] = 'pages/items/'.$target_id.'/'.$fileName;
 
 					}
 
 				}
 
-				// フォールドの値の繰り上げの準備
-				for($i = 1; $i < 4; $i++){
-					$post_data["image_path_$i"] = null; // 一旦全てnullにする
-				}
+			}
+			App::__debug_vardumpToTxt($updateImagePaths);
 
-				// フォールドの値の繰り上げ
-				foreach($leave_file_paths as $key => $value){
-					$post_data['image_path_'.($key + 1)] = $value;
-				}
+			// フィールドの値の繰り上げの準備
+			for($i = 1; $i < 4; $i++){
+				$post_data["image_path_$i"] = null; // 全てnullで初期化
+			}
+
+			// nullを削除して詰めてindexを振り直す
+			$updateImagePaths = array_merge(array_filter($updateImagePaths));
+			App::__debug_vardumpToTxt($updateImagePaths);
+
+			// フィールドの値にセット
+			foreach($updateImagePaths as $key => $value){
+				$post_data['image_path_'.($key + 1)] = $value;
 			}
 
 
-			// アップデート処理
+			// アップデート
 			$update_entity = $this->Items->patchEntity($target_entity,$post_data);
 
 			if($this->Items->save($update_entity)){
