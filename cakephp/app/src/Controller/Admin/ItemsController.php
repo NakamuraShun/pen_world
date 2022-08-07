@@ -330,8 +330,39 @@ class ItemsController extends App
 				empty($file_del_flg_1 && $file_del_flg_2 && $file_del_flg_3)
 			){
 
+				// ここから--------------------------------
+				// 先に重複確認
+				// for($i = 1; $i < 4; $i++){
+
+				// 	$fileData = ${'file_'.$i};
+				// 	$fileName = ${'file_name_'.$i};
+
+				// 	if(!empty($fileName)){
+				// 		$confirm_file_paths[] = 'pages/items/'.$target_id.'/'.$fileName;
+				// 	}else{
+				// 		if(${'target_image_path_'.$i} !== null){
+				// 			$confirm_file_paths[] = ${'target_image_path_'.$i};
+				// 		}
+				// 	}
+
+				// }
+
+				// // 重複を確認
+				// $countFileNames = array_count_values([$confirm_file_paths]);
+
+				// foreach($countFileNames as $key => $value){
+				// 	if($value > 1){
+
+				// 	}
+				// }
+				// ここまで--------------------------------
+
+
 				// ファイル格納
 				for($i = 1; $i < 4; $i++){
+
+					$fileData = ${'file_'.$i};
+					$fileName = ${'file_name_'.$i};
 
 					if(!empty($fileName)){
 
