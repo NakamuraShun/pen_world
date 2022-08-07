@@ -56,7 +56,7 @@ class ItemsController extends App
 
 		// 重複を確認
 		if($countFileNames[$fileName] > 1){
-			$er["duplication"] = "ファイル名が重複している画像はアップロードできません";
+			$er["postDuplication"] = "ファイル名が重複している画像はアップロードできません";
 		}
 
 		if(!empty($er)){
@@ -258,6 +258,8 @@ class ItemsController extends App
 			$target_image_path_2 = $target_entity["image_path_2"];
 			$target_image_path_3 = $target_entity["image_path_3"];
 
+			// 更新エンティティimage_path配列
+			$targetImagePaths = [$target_image_path_1,$target_image_path_2,$target_image_path_3];
 	
 			// エラー配列
 			$ers = [];
@@ -330,50 +332,37 @@ class ItemsController extends App
 				empty($file_del_flg_1 && $file_del_flg_2 && $file_del_flg_3)
 			){
 
-				// ここから--------------------------------
-				// 先に重複確認
-				// for($i = 1; $i < 4; $i++){
-
-				// 	$fileData = ${'file_'.$i};
-				// 	$fileName = ${'file_name_'.$i};
-
-				// 	if(!empty($fileName)){
-				// 		$confirm_file_paths[] = 'pages/items/'.$target_id.'/'.$fileName;
-				// 	}else{
-				// 		if(${'target_image_path_'.$i} !== null){
-				// 			$confirm_file_paths[] = ${'target_image_path_'.$i};
-				// 		}
-				// 	}
-
-				// }
-
-				// // 重複を確認
-				// $countFileNames = array_count_values([$confirm_file_paths]);
-
-				// foreach($countFileNames as $key => $value){
-				// 	if($value > 1){
-
-				// 	}
-				// }
-				// ここまで--------------------------------
-
-
 				// ファイル格納
 				for($i = 1; $i < 4; $i++){
 
-					$fileData = ${'file_'.$i};
-					$fileName = ${'file_name_'.$i};
+					$fileData        = ${'file_'.$i};
+					$fileName        = ${'file_name_'.$i};         // 送信ファイル名
+					$targetImagePath = ${'target_image_path_'.$i}; // 既存のファイルパス
 
 					if(!empty($fileName)){
 
+						// 既存画像の重複確認
+						for($c = 1; $c < 4; $c++){
+							if($fileName == str_replace("pages/items/$target_id/", '', ${'target_image_path_'.$c})){
+								$er["targetDuplication"] = "更新前に同名のファイルが存在しました(ファイル名を変更するか、削除してからアップしてください)";
+								$ers[] = $er;
+								continue;
+							}
+						}
+
+						if(!empty($er["targetDuplication"])){
+							$leave_file_paths[] = $targetImagePath;
+							continue;
+						}
+
 						// エラーチェック
-						$errResult = $this->checkFile($fileName, $countFileNames); // 調整必要
+						$errResult = $this->checkFile($fileName, $countFileNames);
 						if($errResult !== true){
 							$ers[] = $errResult;
-							if(${'target_image_path_'.$i} !== null){ // 既存パスを格納
-								$leave_file_paths[] = ${'target_image_path_'.$i};
+							if($targetImagePath !== null){
+								$leave_file_paths[] = $targetImagePath;
 							}
-							continue; // エラーを記録して次へスキップ
+							continue;
 						}
 
 						// ファイル格納
@@ -382,10 +371,9 @@ class ItemsController extends App
 						// パス配列に追加
 						$leave_file_paths[] = 'pages/items/'.$target_id.'/'.$fileName;
 
-
 						// 既存画像削除
-						if(${'target_image_path_'.$i} !== null){
-							$delete_file_name = str_replace("pages/items/$target_id/", '', ${'target_image_path_'.$i});
+						if($targetImagePath !== null){
+							$delete_file_name = str_replace("pages/items/$target_id/", '', $targetImagePath);
 
 							$file = new File($dirPath.'/'.$delete_file_name);
 
@@ -397,8 +385,8 @@ class ItemsController extends App
 
 					}else{
 
-						if(${'target_image_path_'.$i} !== null){
-							$leave_file_paths[] = ${'target_image_path_'.$i};
+						if($targetImagePath !== null){
+							$leave_file_paths[] = $targetImagePath;
 						}
 
 					}
@@ -417,12 +405,27 @@ class ItemsController extends App
 			}
 
 
+			// アップデート処理
 			$update_entity = $this->Items->patchEntity($target_entity,$post_data);
 
 			if($this->Items->save($update_entity)){
+
 				App::__flash_success('更新されました');
+
+				if(!empty($ers)){
+					$erMsgs = [];
+					foreach($ers as $key => $er){
+						$count = (string)$key + 1;
+						$erMsgs[] = $count.'枚目'.':'.join(' / ', $er);
+					}
+					$erAllMsgs = join('<br>', $erMsgs);
+					App::__flash_error("【画像アップロードエラー】以下理由で画像が登録できませんでした<br>$erAllMsgs");
+				}
+
 			}else{
-				App::__flash_error('更新できませんでした');
+
+				App::__flash_error("更新できませんでした");
+
 			}
 
 			return $this->redirect(['action' => 'index']);
