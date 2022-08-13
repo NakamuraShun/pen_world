@@ -3,7 +3,7 @@
 	
 <div class="padding_v_xlarge">
 	<div class="container">
-		<div class="text_md_center margin_b_small">
+		<div class="text_md_center margin_b_large">
 			<p class="en">
 				I will quote this month’s fountain pen.I will quote this month’s fountain pen.
 			</p>
@@ -11,9 +11,11 @@
 				コンテンツを説明する文章が入ります。コンテンツを説明する文章が入ります。コンテンツを説明する文章が入ります。
 			</p>
 		</div>
+		<?php /* 検索非表示
 		<div class="margin_v_large">
 			<?= $this->element('common/search_pen') ?>
 		</div>
+		 */ ?>
 		<?php if(!empty($itemsRow)): ?>
 			<div class="row row-cols-sm-2 row-cols-md-3">
 				<?php foreach ($itemsRow as $item): ?>
