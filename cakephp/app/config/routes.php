@@ -9,7 +9,6 @@ $routes->setRouteClass(DashedRoute::class);
 
 ////////// 管理画面 ////////////////////////////////////////
 $routes->prefix('Admin', function (RouteBuilder $builder) {
-	$builder->connect('/',		           ['controller' => 'Home', 'action' => 'index']);
 	// カテゴリ
 	$builder->connect('/categorys',		   ['controller' => 'Categorys', 'action' => 'index']);
 	$builder->connect('/categorys/insert', ['controller' => 'Categorys', 'action' => 'insert']);
