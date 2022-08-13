@@ -66,18 +66,28 @@
 						</figcaption>
 					</figure>
 					<div class="margin_v_small">
-						<?= $this->Form->label('image_delete_1', 'この画像を削除'); ?>
-						<?= $this->Form->checkbox('image_delete_1', ['hiddenField' => false]); ?>
+						<div class="js-radio-itemfile-flg">
+							<?= $this->Form->radio('item_file_flg_1',
+								['noUpdate' => '変更なし', 'delete' => '削除', 'update' => '更新'],
+								['value' => 'noUpdate']) 
+							?>
+						</div>
+						<?= $this->Form->file('Items.image_path_1', ['class' => 'display_none']) ?>
+						<?= $this->Form->error('Items.image_path_1') ?>
 					</div>
 				<?php else: ?>
 					<p class="text_sub">
 						画像1はありません
 					</p>
+					<div class="js-radio-itemfile-flg">
+						<?= $this->Form->radio('item_file_flg_1',
+							['noUpdate' => '変更なし', 'update' => '追加'],
+							['value' => 'noUpdate']) 
+						?>
+					</div>
+					<?= $this->Form->file('Items.image_path_1', ['class' => 'display_none']) ?>
+					<?= $this->Form->error('Items.image_path_1') ?>
 				<?php endif; ?>
-				<?= $this->Form->error('Items.image_path_1') ?>
-				<?= $this->Form->file('Items.image_path_1', [
-					'class' => 'btn btn-secondary'
-					]) ?>
 			</div>
 			<div>
 				<?php if(!empty($target_entity->image_path_2)): ?>
@@ -88,18 +98,28 @@
 						</figcaption>
 					</figure>
 					<div class="margin_v_small">
-						<?= $this->Form->label('image_delete_2', 'この画像を削除'); ?>
-						<?= $this->Form->checkbox('image_delete_2', ['hiddenField' => false]); ?>
+						<div class="js-radio-itemfile-flg">
+							<?= $this->Form->radio('item_file_flg_2',
+								['noUpdate' => '変更なし', 'delete' => '削除', 'update' => '更新'],
+								['value' => 'noUpdate']) 
+							?>
+						</div>
+						<?= $this->Form->file('Items.image_path_2', ['class' => 'display_none']) ?>
+						<?= $this->Form->error('Items.image_path_2') ?>
 					</div>
 				<?php else: ?>
 					<p class="text_sub">
 						画像2はありません
 					</p>
+					<div class="js-radio-itemfile-flg">
+						<?= $this->Form->radio('item_file_flg_2',
+							['noUpdate' => '変更なし', 'update' => '追加'],
+							['value' => 'noUpdate']) 
+						?>
+					</div>
+					<?= $this->Form->file('Items.image_path_2', ['class' => 'display_none']) ?>
+					<?= $this->Form->error('Items.image_path_2') ?>
 				<?php endif; ?>
-				<?= $this->Form->error('Items.image_path_2') ?>
-				<?= $this->Form->file('Items.image_path_2', [
-					'class' => 'btn btn-secondary'
-					]) ?>
 			</div>
 			<div>
 				<?php if(!empty($target_entity->image_path_3)): ?>
@@ -110,18 +130,28 @@
 						</figcaption>
 					</figure>
 					<div class="margin_v_small">
-						<?= $this->Form->label('image_delete_3', 'この画像を削除'); ?>
-						<?= $this->Form->checkbox('image_delete_3', ['hiddenField' => false]); ?>
+						<div class="js-radio-itemfile-flg">
+							<?= $this->Form->radio('item_file_flg_3',
+								['noUpdate' => '変更なし', 'delete' => '削除', 'update' => '更新'],
+								['value' => 'noUpdate']) 
+							?>
+						</div>
+						<?= $this->Form->file('Items.image_path_3', ['class' => 'display_none']) ?>
+						<?= $this->Form->error('Items.image_path_3') ?>
 					</div>
 				<?php else: ?>
 					<p class="text_sub">
 						画像3はありません
 					</p>
+					<div class="js-radio-itemfile-flg">
+						<?= $this->Form->radio('item_file_flg_3',
+							['noUpdate' => '変更なし', 'update' => '追加'],
+							['value' => 'noUpdate']) 
+						?>
+					</div>
+					<?= $this->Form->file('Items.image_path_3', ['class' => 'display_none']) ?>
+					<?= $this->Form->error('Items.image_path_3') ?>
 				<?php endif; ?>
-				<?= $this->Form->error('Items.image_path_3') ?>
-				<?= $this->Form->file('Items.image_path_3', [
-					'class' => 'btn btn-secondary'
-					]) ?>
 			</div>
 		</div>
 		
@@ -145,3 +175,27 @@
 	<?= $this->Form->end() ?>
 
 </div>
+
+<script>
+window.onload = function() {
+ 
+	itemfileCheckBoxs = Array.prototype.slice.call(document.getElementsByClassName('js-radio-itemfile-flg')); //配列に変換
+    
+    itemfileCheckBoxs.forEach(function(e) {
+
+		e.addEventListener('change', function() {
+
+			let fileInput = e.nextElementSibling
+			
+			fileInput.classList.add('display_none')
+
+			if(e.querySelector("[value=update]").checked){
+				fileInput.classList.toggle('display_none')
+			}
+
+        })
+
+    })
+ 
+}
+</script>
