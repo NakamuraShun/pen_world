@@ -10,69 +10,31 @@ use Cake\Filesystem\File;
 class ArticlesController extends App
 {
 
-	// public function initialize(): void {
-	// 	parent::initialize();
-	// 	$articles = TableRegistry::getTableLocator()->get('Articles');
-	// }
-
 	// 独自関数 ////////////////////////////////////////////////
 
-	/** savePostArticlesImageメソッド
-	* - save済みのArticleのimage_pathフィールドと格納先の更新
-	* - $file_data = postされたfileオブジェクト
-	* - $id        = レコードID
+	/** checkFileメソッド
+	* - 問題ない場合はtrueを返す
+	* - $fileName       = ファイル名
+	* - $countRequestFileNames = ファイル名の配列
 	*/
-	public function savePostArticlesImage($file_data, $id, $currentImagePath = null) {
-		$file_name = $file_data->getClientFilename(); // ファイル名
 
-		$host = $_SERVER["HTTP_HOST"];
-		if(strpos($host,'localhost')!== false){
-			$dirPath = WWW_ROOT.'img/pages/articles/'.$id; // 格納先ディレクトリ
-		}else{
-			$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/articles/'.$id;
-		}
+	public function checkFile($fileName) {
+		$er = [];
 
-		//ファイル名に日本語が入ってるかチェック
-		$pattern = "/[ぁ-ん]+|[ァ-ヴー]+|[一-龠]/u"; // 日本語を省くための正規表現
-		if(preg_match($pattern, $file_name)){
+		//日本語が入ってるか
+		if(preg_match("/[ぁ-ん]+|[ァ-ヴー]+|[一-龠]/u", $fileName)){
 			$er["jp"] = "日本語のファイル名はアップロードできません";
 		}
 
 		//拡張子を調べる
-		$ext = substr($file_name,-3); // アップされた画像の拡張子を抜き出す
-		if($ext!="jpg" && $ext!="gif" && $ext!="png"){ 
+		$ext = substr($fileName, -3); // アップされた画像の拡張子を抜き出す
+		if($ext != "jpg" && $ext != "gif" && $ext != "png"){ 
 			$er["ext"] = "拡張子はjpgとgifとpng以外はアップロードできません";
 		}
 
-
-		//編集用
-		if(file_exists($dirPath) && !empty($er)){
-			// 更新前の画像パスに戻す
-			$save_entity = $this->Articles->get($id);
-			$save_entity['image_path'] = $currentImagePath;
-			$this->Articles->save($save_entity);
-
-			return $er;
-		}
-
-		//エラー判定
 		if(!empty($er)){
 			return $er;
 		}else{
-			// Helper用パスを保存
-			$save_entity = $this->Articles->get($id);
-			$save_entity['image_path'] = 'pages/articles/'.$id.'/'.$file_name;
-			$this->Articles->save($save_entity);
-			
-			// 格納先を変更
-			if(!file_exists($dirPath)){
-				$folder = new Folder();
-				$folder->create($dirPath);
-			}else{
-				$file = new File($dirPath);
-				$file->delete();
-			}
-			$file_data->moveTo($dirPath.'/'.$file_name);
 			return true;
 		}
 	}
@@ -109,28 +71,76 @@ class ArticlesController extends App
 
 		if($this->request->is('post')){
 
+			// 送信データ
 			$post_data = $this->request->getData('Articles');
-			$post_data["image_path"] = null; // save後、更新
+
+			// 送信ファイル
+			$fileData = $this->request->getData('Articles.image_path');
+
+			// 送信ファイル名
+			$fileName = $fileData->getClientFilename();
+
+			// nullで初期化
+			$post_data["image_path"] = null;
+
+			// 保存
 			$insert_entity = $this->Articles->newEntity($post_data);
-			
 			if($save_entity = $this->Articles->save($insert_entity)){
-
-				App::__flash_success('お知らせが追加されました');
-
-				// fileがある場合
-				if(!empty($this->request->getData('Articles.image_path')->getClientFilename())){
-					$file_save_flg = $this->savePostArticlesImage($this->request->getData('Articles.image_path'), $save_entity->id);
-					if($file_save_flg !== true){
-						$ers = $file_save_flg; // file_save_flgの中身は$er配列
-						$all_er_msg = implode("/", $ers);
-						App::__flash_error("【画像アップロードエラー】<br>画像が登録できませんでした<br>原因:$all_er_msg");
-					}
-				}
-				
+				App::__flash_success('追加されました');
 			}else{
-				App::__flash_error('お知らせが追加できませんでした');
+				App::__flash_error('追加できませんでした');
+				return $this->redirect(['action' => 'index']);
 			}
-			return $this->redirect(['action' => 'index']);
+
+
+			// fileがある場合
+			if(!empty($fileName)){
+
+				// 格納先
+				$host = $_SERVER["HTTP_HOST"];
+				if(strpos($host,'localhost')!== false){
+					$dirPath = WWW_ROOT.'img/pages/articles/'.$save_entity->id;
+				}else{
+					$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/articles/'.$save_entity->id;
+				}
+
+				$errResult = $this->checkFile($fileName); // ファイル名のエラー無いか
+
+				if($errResult !== true){
+					
+					$er = $errResult;
+					$erMsg = join(' / ', $er);
+					App::__flash_error("【画像アップロードエラー】以下理由で画像が登録できませんでした<br>$erMsg");
+
+				}else{
+
+					// ディレクトリ作成
+					if(!file_exists($dirPath)){
+						$folder = new Folder();
+						$folder->create($dirPath);
+					}
+
+					// ファイル格納
+					$fileData->moveTo($dirPath.'/'.$fileName);
+
+
+					// 更新するエンティティ
+					$target_entity = $this->Articles->get($save_entity->id);
+
+					// パスを上書き
+					$target_entity["image_path"] = 'pages/articles/'.$save_entity->id.'/'.$fileName;
+
+					// 保存
+					if(!$this->Articles->save($target_entity)){
+
+						App::__flash_error("【画像アップロードエラー】以下理由で画像が登録できませんでした<br>サーバーエラー");
+
+					}
+
+				}
+
+			}
+
 		}
 		
 		return $this->redirect(['action' => 'index']);
@@ -142,42 +152,114 @@ class ArticlesController extends App
 
 		if($this->request->is(['post'])){
 
-			$post_data        = $this->request->getData('Articles');
-			$file_name        = $this->request->getData('Articles.image_path')->getClientFilename();
-			$target_entity    = $this->Articles->get($post_data["id"]);
-			$currentImagePath = $target_entity->image_path;
+			// ****************** セッティング ******************
 
-			if($file_name){
-				$image_path = null;
+			// 送信データ
+			$post_data = $this->request->getData('Articles');
+
+			// ファイル操作のフラグ
+			$file_flg = $this->request->getData('article_file_flg');
+
+
+			// 更新エンティティ
+			$target_entity = $this->Articles->get($post_data["id"]);
+
+			// 更新エンティティid
+			$target_id = $target_entity["id"];
+
+			// 更新エンティティimage_path
+			$currentImagePath = $target_entity["image_path"];
+
+			// 現在のファイルパスで初期化
+			$post_data["image_path"] = $currentImagePath;
+
+			// エラー
+			$er = '';
+
+			// 格納先
+			$host = $_SERVER["HTTP_HOST"];
+			if(strpos($host,'localhost')!== false){
+				$dirPath = WWW_ROOT.'img/pages/articles/'.$target_id;
 			}else{
-				$image_path = $target_entity->image_path;
+				$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/articles/'.$target_id;
 			}
-			$post_data["image_path"] = $image_path;
 
-			// save
+
+			// ****************** 処理はここから ******************
+
+			// deleteフラグがあった場合
+			if(!empty($file_flg == 'delete')){
+
+				$deleteFileName = str_replace("pages/articles/$target_id/", '', $currentImagePath);
+				$file = new File($dirPath.'/'.$deleteFileName);
+				$file->delete(); // 削除
+
+				$post_data["image_path"] = null; // パス更新
+
+			}
+
+
+			// updateフラグがあった場合
+			if(!empty($file_flg == 'update')){
+
+				if(!empty($this->request->getData('Article.image_path')->getClientFilename())){ // 送信ファイルもあった場合
+
+					// 送信ファイル
+					$fileData = $this->request->getData('Article.image_path');
+
+					// 送信ファイル名
+					$fileName = $fileData->getClientFilename();
+
+
+					$errResult = $this->checkFile($fileName); // ファイル名のエラー無いか
+
+					if($errResult !== true){
+						
+						$er = $errResult;
+
+					}else{
+
+						// 既存画像削除
+						if($currentImagePath !== null){
+							$deleteFileName = str_replace("pages/articles/$target_id/", '', $currentImagePath);
+							$file = new File($dirPath.'/'.$deleteFileName);
+							$file->delete();
+						}
+
+						// ファイル格納
+						$fileData->moveTo($dirPath.'/'.$fileName);
+
+						// パスを上書き
+						$post_data["image_path"] = 'pages/articles/'.$target_id.'/'.$fileName;
+
+					}
+
+				}
+
+			}
+
+
+			// アップデート
 			$update_entity = $this->Articles->patchEntity($target_entity,$post_data);
+
 			if($this->Articles->save($update_entity)){
 
-				App::__flash_success('お知らせを編集しました');
+				App::__flash_success('更新されました');
 
-				// fileがある場合
-				if($this->request->getData('Articles.image_path')->getClientFilename()){ 
-					// 新しい画像へのフィールド名と格納先更新
-					$file_save_flg = $this->savePostArticlesImage($this->request->getData('Articles.image_path'), $target_entity->id, $currentImagePath);
-					if($file_save_flg !== true){
-						// エラーメッセージ作成
-						$ers = $file_save_flg; // file_save_flgの中身は$er配列
-						$all_er_msg = implode("/", $ers);
-						App::__flash_error("【画像アップロードエラー】<br>画像が更新できませんでした<br>原因:$all_er_msg");
-					}
+				if(!empty($er)){
+					$erMsg = join(' / ', $er);
+					App::__flash_error("【画像アップロードエラー】以下理由で画像が登録できませんでした<br>$erMsg");
 				}
 
 			}else{
-				App::__flash_error('お知らせを編集できませんでした');
+
+				App::__flash_error("更新できませんでした");
+
 			}
 
 			return $this->redirect(['action' => 'index']);
 		}
+
 
 		// pageSettings
 		$H1_main = 'お知らせ編集';
