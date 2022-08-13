@@ -46,8 +46,8 @@
 						['value' => 'noUpdate']) 
 					?>
 				</div>
-				<?= $this->Form->file('Article.image_path', ['class' => 'display_none']) ?>
-				<?= $this->Form->error('Article.image_path') ?>
+				<?= $this->Form->file('Articles.image_path', ['class' => 'display_none']) ?>
+				<?= $this->Form->error('Articles.image_path') ?>
 			</div>
 		<?php else: ?>
 			<p class="text_sub">
@@ -59,8 +59,8 @@
 					['value' => 'noUpdate']) 
 				?>
 			</div>
-			<?= $this->Form->file('Article.image_path', ['class' => 'display_none']) ?>
-			<?= $this->Form->error('Article.image_path') ?>
+			<?= $this->Form->file('Articles.image_path', ['class' => 'display_none']) ?>
+			<?= $this->Form->error('Articles.image_path') ?>
 		<?php endif; ?>
 
 		<div class="margin_t_medium">

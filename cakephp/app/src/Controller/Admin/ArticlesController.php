@@ -15,7 +15,6 @@ class ArticlesController extends App
 	/** checkFileメソッド
 	* - 問題ない場合はtrueを返す
 	* - $fileName       = ファイル名
-	* - $countRequestFileNames = ファイル名の配列
 	*/
 
 	public function checkFile($fileName) {
@@ -93,16 +92,22 @@ class ArticlesController extends App
 			}
 
 
+			// 格納先
+			$host = $_SERVER["HTTP_HOST"];
+			if(strpos($host,'localhost')!== false){
+				$dirPath = WWW_ROOT.'img/pages/articles/'.$save_entity->id;
+			}else{
+				$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/articles/'.$save_entity->id;
+			}
+
+			// ディレクトリ作成
+			if(!file_exists($dirPath)){
+				$folder = new Folder();
+				$folder->create($dirPath);
+			}
+
 			// fileがある場合
 			if(!empty($fileName)){
-
-				// 格納先
-				$host = $_SERVER["HTTP_HOST"];
-				if(strpos($host,'localhost')!== false){
-					$dirPath = WWW_ROOT.'img/pages/articles/'.$save_entity->id;
-				}else{
-					$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/articles/'.$save_entity->id;
-				}
 
 				$errResult = $this->checkFile($fileName); // ファイル名のエラー無いか
 
@@ -113,12 +118,6 @@ class ArticlesController extends App
 					App::__flash_error("【画像アップロードエラー】以下理由で画像が登録できませんでした<br>$erMsg");
 
 				}else{
-
-					// ディレクトリ作成
-					if(!file_exists($dirPath)){
-						$folder = new Folder();
-						$folder->create($dirPath);
-					}
 
 					// ファイル格納
 					$fileData->moveTo($dirPath.'/'.$fileName);
@@ -156,6 +155,12 @@ class ArticlesController extends App
 
 			// 送信データ
 			$post_data = $this->request->getData('Articles');
+
+			// 送信ファイル
+			$fileData = $this->request->getData('Articles.image_path');
+
+			// 送信ファイル名
+			$fileName = $fileData->getClientFilename();
 
 			// ファイル操作のフラグ
 			$file_flg = $this->request->getData('article_file_flg');
@@ -202,14 +207,7 @@ class ArticlesController extends App
 			// updateフラグがあった場合
 			if(!empty($file_flg == 'update')){
 
-				if(!empty($this->request->getData('Article.image_path')->getClientFilename())){ // 送信ファイルもあった場合
-
-					// 送信ファイル
-					$fileData = $this->request->getData('Article.image_path');
-
-					// 送信ファイル名
-					$fileName = $fileData->getClientFilename();
-
+				if(!empty($fileName)){ // 送信ファイルもあった場合
 
 					$errResult = $this->checkFile($fileName); // ファイル名のエラー無いか
 
