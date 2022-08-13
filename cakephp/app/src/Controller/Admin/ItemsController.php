@@ -109,6 +109,8 @@ class ItemsController extends App
 
 		if($this->request->is('post')){
 
+			$fileMaxCount = 3;
+
 			// postデータ
 			$post_data = $this->request->getData('Items');
 
@@ -117,8 +119,9 @@ class ItemsController extends App
 				$post_data[$value] = intval($post_data[$value]);
 			}
 			// image_pathをnull
-			for($i = 1; $i < 4; $i++){
-				$post_data['image_path_'.$i] = null;
+			for($i = 0; $i < $fileMaxCount; $i++){
+				$n = $i + 1;
+				$post_data['image_path_'.$n] = null;
 			}
 
 			// 保存
@@ -155,11 +158,14 @@ class ItemsController extends App
 				$countRequestFileNames = array_count_values([$file_name_1,$file_name_2,$file_name_3]); // checkFile()に渡す重複確認用の配列
 				
 				// ファイル格納
-				for($i = 1; $i < 4; $i++){
-					if(!empty($this->request->getData('Items.image_path_'.$i)->getClientFilename())){
+				for($i = 0; $i < $fileMaxCount; $i++){
 
-						$fileData = $this->request->getData('Items.image_path_'.$i);
-						$fileName = $this->request->getData('Items.image_path_'.$i)->getClientFilename();
+					$n = $i + 1;
+
+					if(!empty($this->request->getData('Items.image_path_'.$n)->getClientFilename())){
+
+						$fileData = $this->request->getData('Items.image_path_'.$n);
+						$fileName = $this->request->getData('Items.image_path_'.$n)->getClientFilename();
 
 						// エラーチェック
 						$errResult = $this->checkFile($fileName, $countRequestFileNames);
@@ -266,6 +272,8 @@ class ItemsController extends App
 			$target_image_path_2 = $target_entity["image_path_2"];
 			$target_image_path_3 = $target_entity["image_path_3"];
 
+			// ファイルの最大数
+			$fileMaxCount = 3;
 
 			// エラー配列
 			$ers = [];
@@ -291,17 +299,20 @@ class ItemsController extends App
 					$file_flg_3 == 'delete'
 				)){
 
-				for($i = 1; $i < 4; $i++){
+				for($i = 0; $i < $fileMaxCount; $i++){
 
-					if(${'file_flg_'.$i} == 'delete'){
+					$n = $i + 1;
 
-						$deleteFileName = str_replace("pages/items/$target_id/", '', $target_entity["image_path_$i"]);
+					if(${'file_flg_'.$n} == 'delete'){
+
+						$deleteFileName = str_replace("pages/items/$target_id/", '', $target_entity["image_path_$n"]);
 						$file = new File($dirPath.'/'.$deleteFileName);
 						$file->delete(); // 削除
 
-						$updateImagePaths[$i-1] = null; // パス更新
+						$updateImagePaths[$i] = null; // パス更新
 
 					}
+
 				}
 
 			}
@@ -317,10 +328,12 @@ class ItemsController extends App
 				// checkFile()に渡す重複確認用の配列
 				$countRequestFileNames = array_count_values(array_filter([$file_name_1,$file_name_2,$file_name_3]));
 
-				for($i = 1; $i < 4; $i++){
+				for($i = 0; $i < $fileMaxCount; $i++){
 
-					$fileData = ${'file_'.$i};      // 送信ファイル
-					$fileName = ${'file_name_'.$i}; // 送信ファイル名
+					$n = $i + 1;
+
+					$fileData = ${'file_'.$n};      // 送信ファイル
+					$fileName = ${'file_name_'.$n}; // 送信ファイル名
 
 					if(!empty($fileName)){
 
@@ -346,8 +359,8 @@ class ItemsController extends App
 
 
 						// 既存画像削除
-						if($updateImagePaths[$i-1] !== null){
-							$deleteFileName = str_replace("pages/items/$target_id/", '', ${'target_image_path_'.$i});
+						if($updateImagePaths[$i] !== null){
+							$deleteFileName = str_replace("pages/items/$target_id/", '', ${'target_image_path_'.$n});
 							$file = new File($dirPath.'/'.$deleteFileName);
 							$file->delete();
 						}
@@ -356,7 +369,7 @@ class ItemsController extends App
 						$fileData->moveTo($dirPath.'/'.$fileName);
 
 						// パスを上書き
-						$updateImagePaths[$i-1] = 'pages/items/'.$target_id.'/'.$fileName;
+						$updateImagePaths[$i] = 'pages/items/'.$target_id.'/'.$fileName;
 
 					}
 
@@ -365,8 +378,9 @@ class ItemsController extends App
 			}
 
 			// フィールドの値の繰り上げの準備
-			for($i = 1; $i < 4; $i++){
-				$post_data["image_path_$i"] = null; // 全てnullで初期化
+			for($i = 0; $i < $fileMaxCount; $i++){
+				$n = $i + 1;
+				$post_data["image_path_$n"] = null; // 全てnullで初期化
 			}
 
 			// nullを削除して詰めてindexを振り直す
