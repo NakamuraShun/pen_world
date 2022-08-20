@@ -57,7 +57,7 @@
 		</div>
 		<hr>
 		<div class="btn_group_block margin_t_large">
-			<a href="" class="btn_normal">一覧へ戻る</a>
+			<a href="<?php echo $backLink ?>" class="btn_normal" >一覧へ戻る</a>
 		</div>
 	</div>
 </div>

@@ -11,11 +11,56 @@
 				コンテンツを説明する文章が入ります。コンテンツを説明する文章が入ります。コンテンツを説明する文章が入ります。
 			</p>
 		</div>
-		<?php /* 検索非表示
+
+		<?php // 検索 ?>
+		<?= $this->Form->create($search_empty_entity, [
+		'type' => 'GET', 
+		'url' => ['controller'=>'Items','action'=>'index']
+		]) ?>
+		<div class="flex items_center">
+			<div class="flex">
+				<p>
+					カテゴリ
+				</p>
+				<?= $this->Form->select('category_id', $categorysOptions, [
+				'empty' => '指定なし',
+				'default' => $requestCategorysId,
+				'required' => false,
+				]) ?>
+			</div>
+			<div class="flex padding_l_small">
+				<p>
+					ブランド
+				</p>
+				<?= $this->Form->select('brand_id', $brandsOptions, [
+					'empty' => '指定なし',
+					'default' => $requestBrandsId,
+					'required' => false,
+					]) ?>
+			</div>
+			<div class="padding_l_small">
+				<?= $this->Form->submit('検索', ['class' => 'search_pen_submit_btn']) ?>
+			</div>
+		</div>
+		<?= $this->Form->end() ?>
+
+		<a href="<?php echo $this->Url->build([ 'controller' => 'items', 'action' => 'index']); ?>" class="text_link">全件表示</a>
+
+		<hr>
+
+		<p>
+			表示中の商品
+		</p>
+		<p>
+			カテゴリー:<?= h($requestCategorysName); ?>
+		</p>
+		<p>
+			ブランド:<?= h($requestBrandsName); ?>
+		</p>
+		
 		<div class="margin_v_large">
 			<?= $this->element('common/search_pen') ?>
 		</div>
-		 */ ?>
 		<?php if(!empty($itemsRow)): ?>
 			<div class="row row-cols-sm-2 row-cols-md-3">
 				<?php foreach ($itemsRow as $item): ?>
