@@ -54,13 +54,9 @@
 		<p>
 			カテゴリー:<?= h($requestCategorysName); ?>
 		</p>
-		<p>
+		<p class="margin_b_medium">
 			ブランド:<?= h($requestBrandsName); ?>
 		</p>
-		
-		<div class="margin_v_large">
-			<?= $this->element('common/search_pen') ?>
-		</div>
 		<?php if(!empty($itemsRow)): ?>
 			<div class="row row-cols-sm-2 row-cols-md-3">
 				<?php foreach ($itemsRow as $item): ?>
