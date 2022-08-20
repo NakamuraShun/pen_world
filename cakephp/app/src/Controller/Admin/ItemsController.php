@@ -32,7 +32,7 @@ class ItemsController extends App
 
 	/** checkFileメソッド
 	* - 問題ない場合はtrueを返す
-	* - $fileName       = ファイル名
+	* - $fileName = ファイル名
 	* - $countRequestFileNames = ファイル名の配列
 	*/
 

@@ -53,6 +53,7 @@ class ItemsController extends AppController
 					${'request'.$tables.'Id'} = $requestSearchRow->id;
 					${'request'.$tables.'Name'} = $requestSearchRow->name;
 
+					// 検索条件で絞る
 					$itemsRow = $itemsRow->where(["$tables.id" => $requestSearchRow->id]);
 
 				}
