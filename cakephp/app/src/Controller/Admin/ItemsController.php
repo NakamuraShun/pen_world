@@ -19,11 +19,7 @@ class ItemsController extends App
 
 	// 独自関数 ////////////////////////////////////////////////
 
-	/** createItemsOptionsメソッド
-	* - ファイル名に日本語入っている、拡張子が異なる場合は$erを返す
-	* - 問題ない場合はtrueを返す
-	* - $file_name = ファイル名
-	*/
+	// createItemsOptionsメソッド
 
 	// フォーム用オプションデータ
 	function createItemsOptions($rows, $keyField, $valueField){
