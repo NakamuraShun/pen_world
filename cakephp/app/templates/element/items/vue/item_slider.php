@@ -1,5 +1,5 @@
 <script type="text/x-template" id="temp-item-slider">
-	<figure class="ratio_equal frame_mono_sub-border">
+	<figure class="ratio_equal bg_mono_sub-content frame_mono_sub-border">
 		<img :src='"/img/" + selectThumbSrc' class="object_contain">
 	</figure>
 	<div class="flex justify_center margin_t_small" ref="thumbWrap">

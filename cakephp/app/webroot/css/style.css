@@ -1983,12 +1983,6 @@ hr {
   content: "e409";
   color: inherit;
 }
-.bread_crumb_wrap .bread_crumb > li:not(:last-child) {
-  text-decoration: underline;
-}
-.bread_crumb_wrap .bread_crumb > li:not(:last-child) :hover {
-  text-decoration: none;
-}
 
 .bg_mono_sub-content {
   background-color: #fafafa !important;
@@ -2125,7 +2119,7 @@ hr {
   }
 }
 
-.btn_negative, .btn_warning, .btn_positive, .btn_main_fill, .search_pen_submit_btn, .btn_main, .btn_normal {
+.btn_negative, .btn_warning, .btn_positive, .btn_main_fill, .btn_main, .btn_normal {
   cursor: pointer;
   position: relative;
   width: 100%;
@@ -2142,7 +2136,7 @@ hr {
   font-family: 游明朝, "Yu Mincho", "Hiragino Mincho ProN", "HGS明朝E", "Sawarabi Mincho", メイリオ, Meiryo, serif;
   transition: all 0.3s ease-out;
 }
-.btn_negative::after, .btn_warning::after, .btn_positive::after, .btn_main_fill::after, .search_pen_submit_btn::after, .btn_main::after, .btn_normal::after {
+.btn_negative::after, .btn_warning::after, .btn_positive::after, .btn_main_fill::after, .btn_main::after, .btn_normal::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -2152,7 +2146,7 @@ hr {
   color: inherit;
   font-size: 1.2em;
 }
-.btn_negative:disabled, .btn_warning:disabled, .btn_positive:disabled, .btn_main_fill:disabled, .search_pen_submit_btn:disabled, .btn_main:disabled, .btn_normal:disabled {
+.btn_negative:disabled, .btn_warning:disabled, .btn_positive:disabled, .btn_main_fill:disabled, .btn_main:disabled, .btn_normal:disabled {
   color: #808080 !important;
   border-color: #f2f2f2;
   background-color: #f2f2f2;
@@ -2176,12 +2170,12 @@ hr {
   background-color: #DECCD2;
 }
 
-.btn_main_fill, .search_pen_submit_btn {
+.btn_main_fill {
   color: #fff !important;
   border-color: #600624;
   background-color: #600624;
 }
-.btn_main_fill:hover, .search_pen_submit_btn:hover {
+.btn_main_fill:hover {
   color: #600624 !important;
   background-color: #fff;
 }
@@ -2231,7 +2225,7 @@ hr {
   content: "";
 }
 
-.btn_search::after, .search_pen_submit_btn::after {
+.btn_search::after {
   content: "";
 }
 
@@ -2542,21 +2536,6 @@ img {
 
 .ratio_golden {
   padding-top: 56.25%;
-}
-
-.search_pen_body {
-  background-color: #fff;
-  border: 1px solid #f2f2f2;
-}
-.search_pen_body .search_pen_cell {
-  border: 1px solid #f2f2f2;
-}
-
-.search_pen_submit_btn {
-  height: 100%;
-  background-color: #600624;
-  color: #fff;
-  font-size: var(--fontMedium);
 }
 
 /*
@@ -3083,7 +3062,7 @@ _spacer
 *******************************************************************************************************************/
 /* spase
 -------------------------------------------------- */
-.padding_xsmall, .search_pen_body .search_pen_cell {
+.padding_xsmall {
   padding: var(--spacXSmall);
 }
 

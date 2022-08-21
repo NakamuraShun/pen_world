@@ -201,12 +201,6 @@ hr{
 				color: inherit;
 			}
 		}
-		>li:not(:last-child){
-			text-decoration: underline;
-			:hover{
-				text-decoration: none;
-			}
-		}
 	}
 }
 
@@ -780,25 +774,4 @@ img{
 .ratio_golden{ // 16:9
 	@extend .ratio;
 	padding-top: 56.25%;
-}
-
-
-
-/////////////// ユニークUI ///////////////
-//万年筆検索ボックス
-.search_pen_body{
-	background-color: $colorMonoContentBody;
-	border: 1px solid $colorMonoSubContentBorder;
-	.search_pen_cell{
-		@extend .padding_xsmall;
-		border: 1px solid $colorMonoSubContentBorder;
-	}
-}
-.search_pen_submit_btn{
-	height: 100%;
-	@extend .btn_main_fill;
-	@extend .btn_search;
-	background-color: $colorMainBaseBg;
-	color: $colorMonoTextWhite;
-	font-size: $fontMedium;
 }
