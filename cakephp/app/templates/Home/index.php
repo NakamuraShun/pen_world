@@ -6,7 +6,7 @@
 				<img src="https://placehold.jp/1200x680.png" alt="" class="object_cover">
 			</div>
 			<div class="col-xl-9">
-				<div class="height_full flex_column justify_between">
+				<div class="height_full flex_column">
 					<h2 class="family_min color_mono_white bg_main-base text_center padding_small view_pc">
 						<p class="font_medium trans_upper">event / news</p>
 						<p>展示会 / お知らせ</p>
