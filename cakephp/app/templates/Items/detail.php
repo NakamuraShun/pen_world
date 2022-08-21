@@ -29,13 +29,13 @@
 				</p>
 				<hr>
 				<p class="margin_t_medium">
-					商品カテゴリー:&nbsp;
-					<a href="" class="text_link"><?= h($item->category->name); ?></a>
+					商品カテゴリー:&nbsp;					
+					<a href="<?php echo $this->Url->build([ 'controller' => 'Items', 'action' => 'index', '?' => ['category_id' => $item->category->id]]); ?>" class="text_link"><?= h($item->category->name); ?></a>
 				</p>
 				<?php if(!empty($item->brand)): ?>
 					<div class="margin_t_medium">
 						ブランド:&nbsp;
-						<a href="" class="bg_main-low padding_xsmall text_center text_link"><?= h($item->brand->name); ?></a>
+						<a href="<?php echo $this->Url->build([ 'controller' => 'Items', 'action' => 'index', '?' => ['brand_id' => $item->brand->id]]); ?>" class="bg_main-low padding_xsmall text_center text_link"><?= h($item->brand->name); ?></a>
 					</div>
 				<?php endif; ?>
 				<?php if(!empty($item->supplement)): ?>
