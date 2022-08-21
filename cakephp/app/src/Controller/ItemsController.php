@@ -33,34 +33,37 @@ class ItemsController extends AppController
 	
 	public function index(){
 
-			// findは複数行かえってくるのでtoArrayで配列への変換が必要(getな場合は1行しか返さないので不要)
-			$itemsRow = $this->Items->find('all', ['contain' => ['Categorys', 'Brands']])->order(['position' => 'DESC']);
+		// メモ:findは複数行かえってくるのでtoArrayで配列への変換が必要(getな場合は1行しか返さないので不要)
+		$itemsRow = $this->Items->find('all', ['contain' => ['Categorys', 'Brands']])->order(['position' => 'DESC']);
 
-			// 検索条件の情報をViewへ渡す準備(テーブル名 => GETパラメータのキー)
-			$repuestSearchData = [
-				'Categorys' => 'category_id',
-				'Brands' => 'brand_id',
-			];
+		// 検索条件の情報をViewへ渡す準備(テーブル名 => GETパラメータのキー)
+		$repuestSearchData = [
+			'Categorys' => 'category_id',
+			'Brands' => 'brand_id',
+		];
 
-			foreach($repuestSearchData as $tables => $repuestParamKey){
+		foreach($repuestSearchData as $tables => $repuestParamKey){
 
-				${'request'.$tables.'Id'} = 0;
-				${'request'.$tables.'Name'} = '指定なし';
+			${'request'.$tables.'Id'} = 0;
+			${'request'.$tables.'Name'} = '指定なし';
 
-				if(!empty($this->request->getQuery($repuestParamKey))){ // パラメータが存在した場合に上書き
+			if(!empty($this->request->getQuery($repuestParamKey))){ // パラメータが存在した場合に上書き
 
-					$requestSearchRow = $this->$tables->get($this->request->getQuery($repuestParamKey));
-					${'request'.$tables.'Id'} = $requestSearchRow->id;
-					${'request'.$tables.'Name'} = $requestSearchRow->name;
+				$requestSearchRow = $this->$tables->get($this->request->getQuery($repuestParamKey));
+				${'request'.$tables.'Id'} = $requestSearchRow->id;
+				${'request'.$tables.'Name'} = $requestSearchRow->name;
 
-					// 検索条件で絞る
-					$itemsRow = $itemsRow->where(["$tables.id" => $requestSearchRow->id]);
-
-				}
+				// 検索条件で絞る
+				$itemsRow = $itemsRow->where(["$tables.id" => $requestSearchRow->id]);
 
 			}
 
-			$itemsRow = $itemsRow->toArray();
+		}
+
+		$itemsRow = $itemsRow->toArray();
+
+		// 表示件数
+		$itemsRowCount = count($itemsRow);
 
 
 		// pageSettings
@@ -88,7 +91,7 @@ class ItemsController extends AppController
 
 		
 		// setData
-		$this->set(compact('H1_main','H1_sub','metaData','breadCrumb','itemsRow','search_empty_entity','categorysOptions','brandsOptions','requestCategorysId','requestCategorysName','requestBrandsId','requestBrandsName'));
+		$this->set(compact('H1_main','H1_sub','metaData','breadCrumb','itemsRow','itemsRowCount','search_empty_entity','categorysOptions','brandsOptions','requestCategorysId','requestCategorysName','requestBrandsId','requestBrandsName'));
 	}
 
 

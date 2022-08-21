@@ -49,7 +49,7 @@
 		<hr>
 
 		<p>
-			表示中の商品
+			表示中の商品(<?= h($itemsRowCount); ?>件)
 		</p>
 		<p>
 			カテゴリー:<?= h($requestCategorysName); ?>
