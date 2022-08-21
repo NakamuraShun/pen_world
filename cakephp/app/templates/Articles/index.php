@@ -5,7 +5,7 @@
 	<div class="container">
 		<?php if(!empty($articlesRows)): ?>
 			<?php foreach ($articlesRows as $articlesRow): ?>
-				<article class="bg_mono_content padding_medium margin_b_large">
+				<article class="bg_mono_content padding_medium margin_b_large" id="<?= h($articlesRow->id); ?>">
 					<h4 class="title_h4">
 						<p class="label margin_b_small">
 							<?= h($articlesRow->date); ?>

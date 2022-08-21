@@ -17,7 +17,7 @@
 		'type' => 'GET', 
 		'url' => ['controller'=>'Items','action'=>'index']
 		]) ?>
-		<div class="flex justify_end items_center">
+		<div class="flex justify_center items_center">
 			<div class="flex">
 				<p class="margin_r_xsmall">
 					カテゴリ

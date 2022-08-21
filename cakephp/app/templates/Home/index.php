@@ -11,39 +11,25 @@
 						<p class="font_medium trans_upper">event / news</p>
 						<p>展示会 / お知らせ</p>
 					</h2>
-					<section class="card_main margin_t_small">
-						<a href="<?php echo $this->Url->build([ 'controller' => 'Articles', 'action' => 'index']); ?>">
-							<h3 class="family_min">
-								<span class="label">更新日 2021/07/21</span>
-								<span class="inline_block color_main-base">2021年度 展示即売会【8月15日】</span>
-							</h3>
-							<p class="clamp_1 clamp_sm_2">
-								環境芸術祭　杜のホールはしもと ミウイ橋本８Fホール（14時〜20時）*京王相模原線　橋本駅北口右側 環境芸術祭　杜のホールはしもと ミウイ橋本８Fホール（14時〜20時）*京王相模原線　橋本駅北口右側
-							</p>
-						</a>
-					</section>
-					<section class="card_main margin_t_small">
-						<a href="">
-							<h3 class="family_min">
-								<span class="label">更新日 2021/07/21</span>
-								<span class="inline_block color_main-base">2021年度 展示即売会【8月15日】</span>
-							</h3>
-							<p class="clamp_1 clamp_sm_2">
-								環境芸術祭　杜のホールはしもと ミウイ橋本８Fホール（14時〜20時）*京王相模原線　橋本駅北口右側 環境芸術祭　杜のホールはしもと ミウイ橋本８Fホール（14時〜20時）*京王相模原線　橋本駅北口右側
-							</p>
-						</a>
-					</section>
-					<section class="card_main margin_t_small">
-						<a href="">
-							<h3 class="family_min">
-								<span class="label">更新日 2021/07/21</span>
-								<span class="inline_block color_main-base">2021年度 展示即売会【8月15日】</span>
-							</h3>
-							<p class="clamp_1 clamp_sm_2">
-								環境芸術祭　杜のホールはしもと ミウイ橋本８Fホール（14時〜20時）*京王相模原線　橋本駅北口右側 環境芸術祭　杜のホールはしもと ミウイ橋本８Fホール（14時〜20時）*京王相模原線　橋本駅北口右側
-							</p>
-						</a>
-					</section>
+					<?php if(!empty($articlesRows)): ?>
+						<?php foreach ($articlesRows as $articlesRow): ?>
+							<article class="card_main margin_t_small">
+								<a href="<?php echo $this->Url->build(['controller' => 'Articles', 'action' => 'index', '#' => $articlesRow->id]); ?>">
+									<h3 class="family_min">
+										<span class="label"><?= h($articlesRow->date); ?></span>
+										<span class="inline_block color_main-base"><?= h($articlesRow->title); ?></span>
+									</h3>
+									<p class="clamp_1 clamp_sm_2">
+										<?= h($articlesRow->description); ?>
+									</p>
+								</a>
+							</article>
+						<?php endforeach; ?>
+					<?php else: ?>
+						<p class="text_center">
+							お知らせはありません
+						</p>
+					<?php endif; ?>
 				</div>
 			</div>
 		</div>
@@ -81,81 +67,58 @@
 </section>
 
 <?php /* PICK UP */ ?>
-<section>
-	<div class="container padding_b_xlarge">
-		<h2 class="title_h2">
-			<p>pick up</p>
-			<span>ピックアップ商品</span>
-		</h2>
-		<div class="text_md_center margin_b_medium">
-			<p class="en">
-				I will quote this month’s fountain pen.I will quote this month’s fountain pen.
-			</p>
-			<p class="margin_t_small">
-				コンテンツを説明する文章が入ります。コンテンツを説明する文章が入ります。コンテンツを説明する文章が入ります。
-			</p>
-		</div>
-		<div class="margin_b_medium">
-			<?= $this->element('information/rule') ?>
-		</div>
-		<div class="row row-cols-md-3">
-			<div>
-				<section class="card_main">
-					<a href="<?php echo $this->Url->build([ 'controller' => 'items', 'action' => 'detail']); ?>">
-						<figure class="n_margin_medium">
-							<img src="https://placehold.jp/380x155.png" alt="万年筆">
-						</figure>
-						<div class="margin_t_large">
-							<h3 class="family_min">
-								<span class="inline_block color_main-base">2021年度 展示即売会【8月15日】</span>
-							</h3>
-							<p>
-								環境芸術祭　杜のホールはしもと ミウイ橋本８Fホール（14時〜20時）*京王相模原線　橋本駅北口右側
-							</p>
-						</div>
-					</a>
-				</section>
+<?php if(!empty($itemsRows)): ?>
+	<section>
+		<div class="container padding_b_xlarge">
+			<h2 class="title_h2">
+				<p>pick up</p>
+				<span>ピックアップ商品</span>
+			</h2>
+			<div class="text_md_center margin_b_medium">
+				<p class="en">
+					I will quote this month’s fountain pen.I will quote this month’s fountain pen.
+				</p>
+				<p class="margin_t_small">
+					コンテンツを説明する文章が入ります。コンテンツを説明する文章が入ります。コンテンツを説明する文章が入ります。
+				</p>
 			</div>
-			<div>
-				<section class="card_main">
-					<a href="">
-						<figure class="n_margin_medium">
-							<img src="https://placehold.jp/375x150.png" alt="万年筆">
-						</figure>
-						<div class="margin_t_large">
-							<h3 class="family_min">
-								<span class="inline_block color_main-base">2021年度 展示即売会【8月15日】</span>
-							</h3>
-							<p>
-								環境芸術祭　杜のホールはしもと ミウイ橋本８Fホール（14時〜20時）*京王相模原線　橋本駅北口右側
-							</p>
-						</div>
-					</a>
-				</section>
+			<div class="margin_b_medium">
+				<?= $this->element('information/rule') ?>
 			</div>
-			<div>
-				<section class="card_main">
-					<a href="">
-						<figure class="n_margin_medium">
-							<img src="https://placehold.jp/375x150.png" alt="万年筆">
-						</figure>
-						<div class="margin_t_large">
-							<h3 class="family_min">
-								<span class="inline_block color_main-base">2021年度 展示即売会【8月15日】</span>
-							</h3>
-							<p>
-								環境芸術祭　杜のホールはしもと ミウイ橋本８Fホール（14時〜20時）*京王相模原線　橋本駅北口右側
-							</p>
-						</div>
-					</a>
-				</section>
+			<div class="row row-cols-1 row-cols-md-3">
+				<?php foreach ($itemsRows as $item): ?>
+					<div>
+						<article class="card_main height_full">
+							<a href="<?php echo $this->Url->build([ 'controller' => 'items', 'action' => 'detail', '?' => ['id' => $item->id]]); ?>">
+								<figure class="ratio_golden n_margin_medium bg_mono_sub-content">
+									<?= $this->Html->image($item->image_path_1, ['class' => 'object_contain']); ?>
+								</figure>
+								<div class="margin_t_large">
+									<h3 class="family_min color_main-base">
+										<?= h($item->name); ?>
+									</h3>
+									<p class="clamp_2">
+										<?= h($item->caption); ?>
+									</p>
+									<?php if(!empty($item->brand)): ?>
+										<div class="margin_t_medium">
+											<span class="bg_main-low padding_xsmall margin_t_small text_center">
+												<?= h($item->brand->name); ?>
+											</span>
+										</div>
+									<?php endif; ?>
+								</div>
+							</a>
+						</article>
+					</div>
+				<?php endforeach; ?>
+			</div>
+			<div class="btn_group_block margin_t_large">
+				<a href="<?php echo $this->Url->build([ 'controller' => 'items']); ?>" class="btn_main">all items</a>
 			</div>
 		</div>
-		<div class="btn_group_block margin_t_large">
-			<a href="<?php echo $this->Url->build([ 'controller' => 'items']); ?>" class="btn_main">all items</a>
-		</div>
-	</div>
-</section>
+	</section>
+<?php endif; ?>
 
 <?php /* OWN BRAND */ ?>
 <section>
