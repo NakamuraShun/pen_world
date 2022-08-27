@@ -129,6 +129,18 @@ class ItemsController extends App
 				return $this->redirect(['action' => 'index']);
 			}
 
+
+			$host = $_SERVER["HTTP_HOST"];
+			if(strpos($host,'localhost')!== false){
+				$dirPath = WWW_ROOT.'img/pages/items/'.$save_entity->id; // 格納先
+			}else{
+				$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/items/'.$save_entity->id;
+			}
+
+			// ディレクトリ作成
+			$folder = new Folder();
+			$folder->create($dirPath);
+
 			// 送信ファイル名
 			$file_name_1 = $this->request->getData('Items.image_path_1')->getClientFilename();
 			$file_name_2 = $this->request->getData('Items.image_path_2')->getClientFilename();
@@ -143,13 +155,6 @@ class ItemsController extends App
 
 				$ers = [];       // エラー配列
 				$filePaths = []; // DBに保存するためのファイルパス配列
-
-				$host = $_SERVER["HTTP_HOST"];
-				if(strpos($host,'localhost')!== false){
-					$dirPath = WWW_ROOT.'img/pages/items/'.$save_entity->id; // 格納先
-				}else{
-					$dirPath = '/home/xs293869/pen-world.net/public_html/img/pages/items/'.$save_entity->id;
-				}
 
 				$countRequestFileNames = array_count_values([$file_name_1,$file_name_2,$file_name_3]); // checkFile()に渡す重複確認用の配列
 				
@@ -168,12 +173,6 @@ class ItemsController extends App
 						if($errResult !== true){
 							$ers[] = $errResult;
 							continue; // エラーを記録して次へスキップ
-						}
-
-						// ディレクトリ作成
-						if(!file_exists($dirPath)){
-							$folder = new Folder();
-							$folder->create($dirPath);
 						}
 
 						// ファイル格納
