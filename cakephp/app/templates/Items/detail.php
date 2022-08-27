@@ -52,7 +52,7 @@
 				<hr>
 				<div class="panel text_center margin_t_small">
 					<?php if(!empty($item->price)): ?>
-						<?= h($item->price) ?>円
+						<?= h($item->price) ?>円&nbsp;(税抜)
 					<?php else: ?>
 						<p class="font_small text_center">
 							お値段は店頭でまたはお電話にてご確認お願いします
