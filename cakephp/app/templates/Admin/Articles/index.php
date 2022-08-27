@@ -42,10 +42,10 @@
 								<?= h($articlesRow->id); ?>
 							</td>
 							<td class="text_sub">
-								<?= h($articlesRow->created); ?>
+							<?= date_format($articlesRow->created, 'Y/m/d'); ?>
 							</td>
 							<td>
-								<?= h($articlesRow->date); ?>
+								<?= date_format($articlesRow->date, 'Y/m/d'); ?>
 							</td>
 							<td>
 								<?= h($articlesRow->title); ?>

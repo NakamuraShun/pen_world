@@ -62,7 +62,11 @@
 						<section class="card_main height_full">
 							<a href="<?php echo $this->Url->build([ 'controller' => 'items', 'action' => 'detail', '?' => ['id' => $item->id]]); ?>">
 								<figure class="ratio_golden n_margin_medium bg_mono_sub-content">
-									<?= $this->Html->image($item->image_path_1, ['class' => 'object_contain']); ?>
+									<?php if(!empty($item->image_path_1)): ?>
+										<?= $this->Html->image($item->image_path_1, ['class' => 'object_contain']); ?>
+									<?php else: ?>
+										<?= $this->Html->image('pages/items/noimage.jpg', ['class' => 'object_contain']); ?>
+									<?php endif; ?>
 								</figure>
 								<div class="margin_t_large">
 									<h3 class="family_min color_main-base">
@@ -71,6 +75,13 @@
 									<p class="clamp_2">
 										<?= h($item->caption); ?>
 									</p>
+									<?php if(!empty($item->category->name)): ?>
+										<div class="margin_t_medium">
+											<span class="bg_main-low padding_xsmall margin_t_small text_center">
+												<?= h($item->category->name); ?>
+											</span>
+										</div>
+									<?php endif; ?>
 									<?php if(!empty($item->brand)): ?>
 										<div class="margin_t_medium">
 											<span class="bg_main-low padding_xsmall margin_t_small text_center">

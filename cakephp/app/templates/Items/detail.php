@@ -29,7 +29,7 @@
 				</p>
 				<hr>
 				<p class="margin_t_medium">
-					商品カテゴリー:&nbsp;					
+					カテゴリー:&nbsp;					
 					<a href="<?php echo $this->Url->build([ 'controller' => 'Items', 'action' => 'index', '?' => ['category_id' => $item->category->id]]); ?>" class="text_link"><?= h($item->category->name); ?></a>
 				</p>
 				<?php if(!empty($item->brand)): ?>
@@ -46,7 +46,7 @@
 				<hr>
 				<div class="panel text_center margin_t_small">
 					<?php if(!empty($item->price)): ?>
-						<?= h($item->price) ?>
+						<?= h($item->price) ?>円
 					<?php else: ?>
 						<p class="font_small text_center">
 							お値段は店頭でまたはお電話にてご確認お願いします

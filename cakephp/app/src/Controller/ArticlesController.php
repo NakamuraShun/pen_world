@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Controller\AppController;
+use App\Controller\AppController as App;
 
 
-class ArticlesController extends AppController
+class ArticlesController extends App
 {
 	
 	public function index(){
@@ -25,7 +25,6 @@ class ArticlesController extends AppController
 
 		// 全お知らせデータ
 		$articlesRows = $this->Articles->find('all')->order(['date' => 'DESC'])->toArray();
-		
 		// setData
 		$this->set(compact('H1_main','H1_sub','metaData','breadCrumb','articlesRows'));
 	}
