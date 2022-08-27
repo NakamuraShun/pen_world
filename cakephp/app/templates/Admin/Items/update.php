@@ -1,3 +1,10 @@
+<!-- <?php
+if($target_entity->brand == null){
+	$target_entity->brand->id = 0;
+}
+echo $target_entity->brand->id;
+?> -->
+
 <div class="container">
 
 	<?php // 新規登録 ?>
@@ -164,10 +171,17 @@
 		</div>
 		<div class="margin_t_small">
 			<?= $this->Form->error('Items.brand_id') ?>
-			<?= $this->Form->select('Items.brand_id', $brandsOptions, [
-				'empty' => 'ブランド選択',
-				'default' => $target_entity->brand->id,
+			<?php if($target_entity->brand == null): ?>
+				<?= $this->Form->select('Items.brand_id', $brandsOptions, [
+					'empty' => 'ブランド選択',
+					'default' => 0,
 				]) ?>
+			<?php else: ?>
+				<?= $this->Form->select('Items.brand_id', $brandsOptions, [
+					'empty' => 'ブランド選択',
+					'default' => $target_entity->brand->id,
+				]) ?>
+			<?php endif; ?>
 		</div>
 		<div class="margin_t_medium margin_b_large">
 			<?= $this->Form->submit('更新', ['class' => 'btn btn-success']) ?>

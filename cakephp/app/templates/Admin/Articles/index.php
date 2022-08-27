@@ -31,7 +31,6 @@
 						<th>登録日</th>
 						<th>日付</th>
 						<th>タイトル</th>
-						<th>コンテンツ</th>
 						<th>画像</th>
 						<th></th>
 					</tr>
@@ -52,12 +51,9 @@
 								<?= h($articlesRow->title); ?>
 							</td>
 							<td>
-								<?= h($articlesRow->description); ?>
-							</td>
-							<td>
 								<?php if($articlesRow->image_path): ?>
 									<figure>
-										<?= $this->Html->image($articlesRow->image_path, ['class' => 'object_contain', 'width'=>'150', 'height'=>'150']); ?>
+										<?= $this->Html->image($articlesRow->image_path, ['class' => 'object_contain', 'width'=>'100', 'height'=>'100']); ?>
 										<figcaption class="text_sub text_center margin_t_xsmall">
 											<?= h($articlesRow->image_path); ?>
 										</figcaption>

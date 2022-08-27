@@ -60,9 +60,6 @@
 						<th>カテゴリ</th>
 						<th>ブランド</th>
 						<th>商品名</th>
-						<th>キャプション</th>
-						<th>商品説明</th>
-						<th>備考</th>
 						<th>値段</th>
 						<th>画像1</th>
 						<th>画像2</th>
@@ -81,62 +78,42 @@
 								<?php if($itemsRow->position): ?>
 									<?= h($itemsRow->position); ?>
 								<?php else: ?>
-									優先度未設定
+									---
 								<?php endif; ?>
 							</td>
-							<td class="text_sub">
+							<td>
 								<?php if($itemsRow->category->name): ?>
 									<?= h($itemsRow->category->name); ?>
 								<?php else: ?>
-									カテゴリ未設定
+									---
 								<?php endif; ?>
 							</td>
-							<td class="text_sub">
-								<?php if($itemsRow->brand->name): ?>
+							<td>
+								<?php if($itemsRow->brand): ?>
 									<?= h($itemsRow->brand->name); ?>
 								<?php else: ?>
-									ブランド未設定
+									---
 								<?php endif; ?>
 							</td>
 							<td>
 								<?= h($itemsRow->name); ?>
 							</td>
 							<td>
-								<?php if($itemsRow->caption): ?>
-									<?= h($itemsRow->caption); ?>
-								<?php else: ?>
-									<span class="text_sub">キャプション未設定</span>
-								<?php endif; ?>
-							</td>
-							<td>
-								<?= h($itemsRow->description); ?>
-							</td>
-							<td>
-								<?php if($itemsRow->supplement): ?>
-									<?= h($itemsRow->supplement); ?>
-								<?php else: ?>
-									<span class="text_sub">備考未設定</span>
-								<?php endif; ?>
-							</td>
-							<td>
 								<?php if($itemsRow->price): ?>
 									<?= h($itemsRow->price); ?>円
 								<?php else: ?>
-									<span class="text_sub">値段未設定</span>
+									<span class="text_sub">---</span>
 								<?php endif; ?>
 							</td>
 							<td>
 								<div class="display_flex">
 									<?php if($itemsRow->image_path_1): ?>
 										<figure>
-											<?= $this->Html->image($itemsRow->image_path_1, ['class' => 'object_contain', 'width'=>'150', 'height'=>'150']); ?>
-											<figcaption class="text_sub text_center margin_t_xsmall">
-												<?= h($itemsRow->image_path_1); ?>
-											</figcaption>
+											<?= $this->Html->image($itemsRow->image_path_1, ['class' => 'object_contain', 'width'=>'50', 'height'=>'50']); ?>
 										</figure>
 									<?php else: ?>
-										<p class="text_sub">
-											画像1は未設定
+										<p class="text_sub text_center">
+											---
 										</p>
 									<?php endif; ?>
 								</div>
@@ -145,14 +122,11 @@
 								<div class="display_flex">
 									<?php if($itemsRow->image_path_2): ?>
 										<figure>
-											<?= $this->Html->image($itemsRow->image_path_2, ['class' => 'object_contain', 'width'=>'150', 'height'=>'150']); ?>
-											<figcaption class="text_sub text_center margin_t_xsmall">
-												<?= h($itemsRow->image_path_2); ?>
-											</figcaption>
+											<?= $this->Html->image($itemsRow->image_path_2, ['class' => 'object_contain', 'width'=>'50', 'height'=>'50']); ?>
 										</figure>
 									<?php else: ?>
-										<p class="text_sub">
-											画像2は未設定
+										<p class="text_sub text_center">
+											---
 										</p>
 									<?php endif; ?>
 								</div>
@@ -161,14 +135,11 @@
 								<div class="display_flex">
 									<?php if($itemsRow->image_path_3): ?>
 										<figure>
-											<?= $this->Html->image($itemsRow->image_path_3, ['class' => 'object_contain', 'width'=>'150', 'height'=>'150']); ?>
-											<figcaption class="text_sub text_center margin_t_xsmall">
-												<?= h($itemsRow->image_path_3); ?>
-											</figcaption>
+											<?= $this->Html->image($itemsRow->image_path_3, ['class' => 'object_contain', 'width'=>'50', 'height'=>'50']); ?>
 										</figure>
 									<?php else: ?>
-										<p class="text_sub">
-											画像3は未設定
+										<p class="text_sub text_center">
+											---
 										</p>
 									<?php endif; ?>
 								</div>
