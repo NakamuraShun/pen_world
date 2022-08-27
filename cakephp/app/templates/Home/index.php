@@ -91,7 +91,11 @@
 						<article class="card_main height_full">
 							<a href="<?php echo $this->Url->build([ 'controller' => 'items', 'action' => 'detail', '?' => ['id' => $item->id]]); ?>">
 								<figure class="ratio_golden n_margin_medium bg_mono_sub-content">
-									<?= $this->Html->image($item->image_path_1, ['class' => 'object_contain']); ?>
+									<?php if(!empty($item->image_path_1)): ?>
+										<?= $this->Html->image($item->image_path_1, ['class' => 'object_contain']); ?>
+									<?php else: ?>
+										<?= $this->Html->image('pages/items/noimage.jpg', ['class' => 'object_contain']); ?>
+									<?php endif; ?>
 								</figure>
 								<div class="margin_t_large">
 									<h3 class="family_min color_main-base">
