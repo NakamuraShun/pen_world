@@ -122,7 +122,7 @@ class ItemsController extends AppController
 		];
 
 	
-		if($item->image_paths_1 == null){
+		if($item->image_path_1 == null){
 
 			$json_image_paths = null;
 
