@@ -16,12 +16,18 @@
 	<div class="container">
 		<div class="row row-cols-sm-2 gutter_wide">
 			<div>
-				<div id="VueAppItemSlider">
-					<vue-item-slider
-						:thumbsrcarr = <?php echo h($json_image_paths); ?>
-					>
-					</vue-item-slider>
-				</div>
+				<?php if($json_image_paths == null): ?>
+					<figure class="ratio_equal bg_mono_sub-content frame_mono_sub-border">
+						<?= $this->Html->image('pages/items/noimage.jpg', ['class' => 'object_contain']); ?>
+					</figure>
+				<?php else: ?>
+					<div id="VueAppItemSlider">
+						<vue-item-slider
+							:thumbsrcarr = <?php echo h($json_image_paths); ?>
+						>
+						</vue-item-slider>
+					</div>
+				<?php endif; ?>
 			</div>
 			<div>
 				<p class="line_wide">

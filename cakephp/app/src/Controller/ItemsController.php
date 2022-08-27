@@ -121,18 +121,28 @@ class ItemsController extends AppController
 			['name' => "$itemName", 'controller' => '', 'action' => ''],
 		];
 
-		// vueスライダー画像
-		$fileMaxCount = 3;
+	
+		if($item->image_paths_1 == null){
 
-		for($i = 0; $i < $fileMaxCount; $i++){
-			$n = $i + 1;
-			$image_path_property = 'image_path_'.$n;
+			$json_image_paths = null;
 
-			if($item->$image_path_property !== null){
-				$image_paths[] = $item->$image_path_property;
+		}else{
+
+			// vueスライダー画像
+			$fileMaxCount = 3;
+
+			for($i = 0; $i < $fileMaxCount; $i++){
+				$n = $i + 1;
+				$image_path_property = 'image_path_'.$n;
+
+				if($item->$image_path_property !== null){
+					$image_paths[] = $item->$image_path_property;
+				}
 			}
+
+			$json_image_paths = json_encode($image_paths);
+
 		}
-		$json_image_paths = json_encode($image_paths);
 
 		// 戻るボタンのリンク
 		if(!empty($_SERVER['HTTP_REFERER'])){
