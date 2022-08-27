@@ -16,7 +16,7 @@
 							<article class="card_main margin_t_small">
 								<a href="<?php echo $this->Url->build(['controller' => 'Articles', 'action' => 'index', '#' => $articlesRow->id]); ?>">
 									<h3 class="family_min">
-										<span class="label"><?= h($articlesRow->date); ?></span>
+										<span class="label"><?= date_format($articlesRow->date, 'Y/m/d'); ?></span>
 										<span class="inline_block color_main-base"><?= h($articlesRow->title); ?></span>
 									</h3>
 									<p class="clamp_1 clamp_sm_2">
