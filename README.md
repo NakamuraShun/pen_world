@@ -16,8 +16,11 @@ setup.shの内容
 #!/bin/bash
 set -e
 
-echo -e '\n'
-echo -e '========== 本番の環境構築を開始します ==========\n'
+ echo -e '\n'
+ echo -e '========== 本番の環境構築を開始します ==========\n'
+
+# 本番画像をコピー
+cp -ra public_html/img/ ./
 
 # 初期化
 rm -rf public_html/* public_html/.[^\.]*
@@ -46,10 +49,12 @@ echo -e '完了: 構成変更\n'
 chmod 777 -R ../cakephp/logs
 echo -e '完了: 権限変更\n'
 
+# 本番画像を更新
+rm -rf img/
+mv ../img/ ./
+
 # 不要フォルダ除去
 rm -rf pen_world/
-
-echo -e '========== 本番の環境構築更完了しました ==========\n
 ```
 
 ## ローカル環境構築(中村用)
